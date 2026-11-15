@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+  <meta name="theme-color" content="#0a1020" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <title>Pick-it</title>
+  <link rel="stylesheet" href="css/game.css?v=meadow3" />
+</head>
+<body>
+  <div id="rotateOverlay" class="rotate-overlay" aria-live="polite">
+    <div class="rotate-overlay-icon" aria-hidden="true">↻</div>
+    <p class="rotate-overlay-title">Поверните устройство</p>
+    <p class="rotate-overlay-hint">Игра работает только в горизонтальном режиме</p>
+  </div>
+  <div id="app" class="app">
+    <div class="iphone iphone--landscape iphone--14-pro-max" aria-label="iPhone 14 Pro Max landscape (932×430)">
+      <div class="iphone-shell">
+        <span class="iphone-side-btn iphone-side-silent" aria-hidden="true"></span>
+        <span class="iphone-side-btn iphone-side-vol-up" aria-hidden="true"></span>
+        <span class="iphone-side-btn iphone-side-vol-down" aria-hidden="true"></span>
+        <span class="iphone-side-btn iphone-side-power" aria-hidden="true"></span>
+        <div class="iphone-bezel">
+          <div class="iphone-screen">
+            <div class="iphone-island" aria-hidden="true"></div>
+            <div class="stars-layer" id="starsLayer" aria-hidden="true"></div>
+            <div class="iphone-screen-inner">
+              <div class="stage" id="stage">
+      <div class="snow-layer" id="snowLayer" aria-hidden="true"></div>
+      <header class="top-bar">
+        <div class="top-left-controls">
+          <button type="button" class="btn-system btn-info" aria-label="Info">
+            <img src="Assets/System Buttons-1.png" alt="" />
+          </button>
+          <div class="meter-wrap visible" data-intro="meter">
+            <img class="meter-bg" src="Assets/EventSkuMeter.png" alt="" />
+            <span class="meter-value" id="energyValue">8</span>
+          </div>
+          <div class="info-panel-wrap intro-hidden" data-intro="info">
+            <div class="info-swing">
+              <img src="Assets/Info Panel2.png" alt="Play Chase to collect" />
+            </div>
+          </div>
+        </div>
+        <button type="button" class="btn-system btn-close" aria-label="Close">
+          <img src="Assets/System Buttons.png" alt="" />
+        </button>
+        <div class="header-wrap intro-hidden" data-intro="header">
+          <img class="header-img" src="Assets/Header.png" alt="Pick-it" />
+        </div>
+      </header>
+
+      <div class="final-prize-wrap intro-hidden" data-intro="panel">
+        <img src="Assets/Final Prize Panel.png" alt="Final Reward" />
+      </div>
+
+      <div class="prize-panel-wrap intro-hidden" data-intro="panel">
+        <div class="prize-panel">
+          <div class="prize-panel-art">
+            <div class="prize-panel-stack">
+              <img
+                class="prize-panel-fill"
+                src="Assets/Prize Panel fill.png?v=2"
+                alt=""
+              />
+              <div class="prize-panel-frame-layer">
+                <img
+                  class="prize-panel-frame"
+                  src="Assets/Prize Panel frame.png?v=2"
+                  alt=""
+                />
+                <span class="prize-panel-shine" aria-hidden="true"></span>
+              </div>
+            </div>
+          </div>
+          <div class="prize-panel-items" id="prizePanelItems"></div>
+        </div>
+      </div>
+
+      <div class="field" id="field"></div>
+
+      <div class="hand-pointer intro-hidden" id="handPointer" aria-hidden="true">
+        <img src="Assets/image 181.png" alt="" />
+      </div>
+
+      <div class="vfx-layer" id="vfxLayer"></div>
+
+      <div class="game-complete-overlay" id="gameCompleteOverlay" aria-hidden="true">
+        <button type="button" class="game-complete-restart" id="gameCompleteRestart" aria-label="Play again">
+          <img src="Assets/Recompletion pop-up.png" alt="" />
+        </button>
+      </div>
+              </div>
+            </div>
+            <div class="iphone-home-bar" aria-hidden="true"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="js/game.js?v=slot65"></script>
+</body>
+</html>

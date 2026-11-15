@@ -1,0 +1,2632 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  height: 100%;
+  background: radial-gradient(ellipse at 50% 30%, #2a2a2e 0%, #0a0a0c 55%, #000 100%);
+  overflow: hidden;
+  font-family: system-ui, -apple-system, Segoe UI, sans-serif;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.app {
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 12px;
+}
+
+/* —— iPhone frame (landscape, iPhone 14 Pro Max logical 932×430 pt) —— */
+.iphone {
+  --iphone-logical-w: 932;
+  --iphone-logical-h: 430;
+  --iphone-preview-scale: 1.3;
+  aspect-ratio: var(--iphone-logical-w) / var(--iphone-logical-h);
+  width: min(
+    calc(96vw * var(--iphone-preview-scale)),
+    calc(
+      100dvh * var(--iphone-logical-w) / var(--iphone-logical-h) *
+        var(--iphone-preview-scale)
+    ),
+    calc(var(--iphone-logical-w) * 1px * var(--iphone-preview-scale))
+  );
+  height: min(
+    calc(100dvh * var(--iphone-preview-scale)),
+    calc(
+      96vw * var(--iphone-logical-h) / var(--iphone-logical-w) *
+        var(--iphone-preview-scale)
+    ),
+    calc(var(--iphone-logical-h) * 1px * var(--iphone-preview-scale))
+  );
+  filter: drop-shadow(0 24px 48px rgba(0, 0, 0, 0.65));
+}
+
+.iphone--14-pro-max .iphone-shell {
+  padding: 11px 12px;
+  border-radius: 64px;
+}
+
+.iphone--14-pro-max .iphone-bezel {
+  border-radius: 54px;
+}
+
+.iphone--14-pro-max .iphone-screen {
+  border-radius: 50px;
+}
+
+.iphone--14-pro-max .iphone-island {
+  width: 36px;
+  min-height: 96px;
+  max-height: 132px;
+  left: 11px;
+}
+
+.iphone-shell {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  padding: 10px 11px;
+  border-radius: 62px;
+  background: linear-gradient(145deg, #4a4a4f 0%, #2c2c30 35%, #1a1a1d 70%, #3d3d42 100%);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.12),
+    inset 0 1px 2px rgba(255, 255, 255, 0.08);
+}
+
+.iphone-bezel {
+  width: 100%;
+  height: 100%;
+  border-radius: 52px;
+  padding: 2px;
+  background: linear-gradient(180deg, #1f1f22, #0a0a0a);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.06);
+}
+
+.iphone-screen {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 48px;
+  background: #7ec8f0 url("../Assets/bg.jpg?v=meadow3") center bottom / cover no-repeat;
+  overflow: hidden;
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+}
+
+.iphone-island {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 32px;
+  height: 26%;
+  min-height: 88px;
+  max-height: 120px;
+  background: #000;
+  border-radius: 22px;
+  z-index: 200;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.04);
+}
+
+.iphone-screen-inner {
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: stretch;
+  justify-content: stretch;
+  padding: 0;
+  container-type: size;
+}
+
+.iphone-home-bar {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 5px;
+  height: 34%;
+  max-height: 120px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.35);
+  z-index: 200;
+  pointer-events: none;
+}
+
+.iphone-side-btn {
+  position: absolute;
+  background: linear-gradient(90deg, #3a3a3e, #252528);
+  border-radius: 2px;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  pointer-events: none;
+}
+
+.iphone-side-silent {
+  top: -3px;
+  left: 16%;
+  width: 28px;
+  height: 3px;
+}
+
+.iphone-side-vol-up {
+  top: -3px;
+  left: 24%;
+  width: 46px;
+  height: 3px;
+}
+
+.iphone-side-vol-down {
+  top: -3px;
+  left: 34%;
+  width: 46px;
+  height: 3px;
+}
+
+.iphone-side-power {
+  right: -3px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 3px;
+  height: 68px;
+}
+
+/* Landscape-only: block portrait with full-screen prompt */
+.rotate-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 100000;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 28px;
+  text-align: center;
+  color: #fff;
+  background: #7ec8f0 url("../Assets/bg.jpg?v=meadow3") center bottom / cover no-repeat;
+  pointer-events: auto;
+}
+
+body.portrait-blocked .rotate-overlay {
+  display: flex;
+}
+
+body.portrait-blocked #app {
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+
+.rotate-overlay-icon {
+  font-size: 3.25rem;
+  line-height: 1;
+  animation: rotateHint 2.2s ease-in-out infinite;
+}
+
+.rotate-overlay-title {
+  font-size: 1.35rem;
+  font-weight: 800;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.85);
+}
+
+.rotate-overlay-hint {
+  font-size: 0.95rem;
+  opacity: 0.88;
+  max-width: 16rem;
+  line-height: 1.35;
+}
+
+@keyframes rotateHint {
+  0%,
+  100% {
+    transform: rotate(-90deg);
+  }
+  50% {
+    transform: rotate(-90deg) scale(1.08);
+  }
+}
+
+/* Legacy: CSS rotate fallback (desktop only, optional) */
+body.force-landscape {
+  overflow: hidden;
+}
+
+body.force-landscape #app {
+  position: fixed;
+  inset: auto;
+  left: 50%;
+  top: 50%;
+  padding: 0;
+  transform: translate(-50%, -50%) rotate(90deg);
+  transform-origin: center center;
+}
+
+body.force-landscape .iphone,
+body.force-landscape .iphone-shell,
+body.force-landscape .iphone-bezel,
+body.force-landscape .iphone-screen,
+body.force-landscape .iphone-screen-inner,
+body.force-landscape .stage {
+  width: 100% !important;
+  height: 100% !important;
+  max-width: none;
+  max-height: none;
+  min-height: 0;
+  flex: 1 1 auto;
+}
+
+body.force-landscape .iphone {
+  display: flex;
+  flex-direction: column;
+  aspect-ratio: auto !important;
+}
+
+body.force-landscape .iphone-shell,
+body.force-landscape .iphone-bezel {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  padding: 0 !important;
+}
+
+body.force-landscape .iphone-screen {
+  flex: 1;
+  display: flex;
+  border-radius: 0 !important;
+}
+
+body.force-landscape .stage {
+  --header-w: min(78.2cqw, 82.8%);
+  --prize-panel-w: min(84cqw, 560px);
+  --prize-panel-gap: 1px;
+  --prize-icon-h: calc(var(--prize-panel-h) * 0.72);
+  --prize-panel-item-overlap: 2px;
+  --prize-panel-items-shift: -50%;
+  --panel-bottom: 0.6%;
+  --prize-panel-rise-offset: min(96px, 22cqh);
+}
+
+body.force-landscape .header-wrap {
+  max-width: calc(100% - 128px);
+}
+
+body.force-landscape .header-img {
+  min-height: 50.6px;
+}
+
+body.force-landscape .prize-panel-wrap {
+  width: min(var(--prize-panel-w), calc(100% - 28px));
+  max-width: none;
+}
+
+/* Phones: drop mockup frame, game fills the viewport */
+@media (hover: none) and (pointer: coarse), (max-width: 768px) {
+  html {
+    height: 100%;
+    height: 100dvh;
+    height: -webkit-fill-available;
+    width: 100%;
+    overflow: hidden;
+    overscroll-behavior: none;
+  }
+
+  body {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    height: 100dvh;
+    height: -webkit-fill-available;
+    margin: 0;
+    overflow: hidden;
+    overscroll-behavior: none;
+    background: #0a1020;
+  }
+
+  #app,
+  #app.app {
+    position: fixed;
+    inset: 0;
+    padding: 0 !important;
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    max-height: 100%;
+    align-items: stretch;
+    justify-content: stretch;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .iphone {
+    --iphone-preview-scale: 1;
+    flex: 1 1 auto;
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    max-height: 100%;
+    aspect-ratio: auto !important;
+    max-width: none;
+    filter: none;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .iphone-shell {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    height: auto;
+    padding: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+  }
+
+  .iphone-bezel {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    height: auto;
+    padding: 0 !important;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+  }
+
+  .iphone-screen {
+    flex: 1;
+    display: flex;
+    flex-direction: row;
+    border-radius: 0;
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  .iphone-screen-inner,
+  .stage {
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    flex: 1 1 auto;
+  }
+
+  .iphone-island,
+  .iphone-home-bar,
+  .iphone-side-btn {
+    display: none !important;
+  }
+
+  .prize-panel-items {
+    padding: 0 var(--prize-panel-items-pad-x, 2.2%);
+    gap: var(--prize-panel-gap, 1px);
+    column-gap: var(--prize-panel-gap, 1px);
+  }
+
+  .top-left-controls {
+    flex-wrap: nowrap;
+  }
+}
+
+@media (hover: none) and (pointer: coarse) and (orientation: landscape) {
+  html,
+  body,
+  #app,
+  .iphone,
+  .iphone-shell,
+  .iphone-bezel,
+  .iphone-screen,
+  .iphone-screen-inner,
+  .stage {
+    height: 100svh;
+    min-height: 100svh;
+    max-height: 100svh;
+  }
+}
+
+html.is-touch.game-landscape,
+html.is-touch.game-landscape body {
+  background: #0a1020;
+}
+
+html.is-touch.game-landscape #app,
+html.is-touch.game-landscape .iphone,
+html.is-touch.game-landscape .iphone-shell,
+html.is-touch.game-landscape .iphone-bezel,
+html.is-touch.game-landscape .iphone-screen,
+html.is-touch.game-landscape .iphone-screen-inner,
+html.is-touch.game-landscape .stage {
+  width: 100vw;
+  max-width: 100vw;
+  margin: 0;
+  padding: 0;
+  border-radius: 0;
+}
+
+/* Info panel layout: phone landscape + local iPhone mockup (no .is-touch on desktop) */
+html.is-touch.game-landscape .stage,
+html:not(.is-touch) .iphone .stage {
+  --info-meter-gap: 0px;
+  --info-ui-gap: 6px;
+  --info-btn-w: 52px;
+  /* Rope X: center of gap between info btn and meter */
+  --info-rope-x: calc(var(--info-btn-w) + var(--info-ui-gap) * 0.5);
+}
+
+html.is-touch.game-landscape .stage {
+  --info-panel-scale: calc(0.9555 * 0.85);
+  --top-left-nudge-x: -10px;
+  /* Rope Y: top of stage + lift info panel slightly */
+  --info-rope-top: calc(
+    -1 * max(var(--ui-top), env(safe-area-inset-top, 8px)) - 20px
+  );
+}
+
+html:not(.is-touch) .iphone .stage {
+  --info-panel-scale: 0.9555;
+  --top-left-nudge-x: 0px;
+  --info-rope-top: calc(-1 * max(var(--ui-top), 10px));
+  --prize-panel-items-drop: -10px;
+  --prize-panel-items-top: 51%;
+}
+
+html.is-touch.game-landscape .top-left-controls,
+html:not(.is-touch) .iphone .top-left-controls {
+  position: absolute;
+}
+
+html.is-touch.game-landscape .info-panel-wrap,
+html:not(.is-touch) .iphone .info-panel-wrap {
+  position: absolute;
+  left: var(--info-rope-x, 55px);
+  top: var(--info-rope-top, -8px);
+  margin-left: 0;
+  margin-top: 0;
+  max-width: calc(124px * var(--info-panel-scale, 0.9555));
+  z-index: 2;
+  transform: translate(-50%, -130%);
+}
+
+html.is-touch.game-landscape .info-panel-wrap.dropped,
+html:not(.is-touch) .iphone .info-panel-wrap.dropped {
+  animation: infoDropAnchored 0.85s cubic-bezier(0.34, 1.4, 0.64, 1) forwards;
+}
+
+html:not(.is-touch) .iphone .top-left-controls {
+  gap: 6px;
+  align-items: flex-start;
+}
+
+/* Touch + landscape: desktop-like UI; prize width in vw (no cqw) */
+html.is-touch.game-landscape .stage {
+  --edge-x: 2px;
+  --ui-top: 8px;
+  --header-w: 42.32%;
+  --close-nudge-x: 32px;
+  --header-est-h: min(12.5vw, 54px);
+  --prize-panel-items-mul: 0.85;
+  --prize-panel-top: calc(0.8% + 10px + var(--header-est-h) + 5px);
+  --field-top: calc(var(--prize-panel-top) + var(--prize-panel-h) + 8px);
+  --prize-panel-gap: 1px;
+  --prize-panel-item-overlap: 2px;
+  --prize-panel-items-shift: -50%;
+  --prize-panel-items-pad-x: 2.2%;
+  --prize-panel-items-drop: -12px;
+  --prize-panel-items-top: 51%;
+  --prize-panel-mobile-size: 1.2;
+  --prize-panel-scale: calc(0.84 * var(--prize-panel-mobile-size, 1));
+  --prize-panel-items-ref-scale: calc(1.06 * var(--prize-panel-mobile-size, 1));
+  --prize-panel-w: min(
+    calc(49.13vw * var(--prize-panel-scale)),
+    calc(419px * var(--prize-panel-scale))
+  );
+  --prize-panel-h: calc(var(--prize-panel-w) * var(--prize-panel-art-h, 197) / 1024);
+  --prize-icon-h: calc(
+    min(
+        calc(49.13vw * var(--prize-panel-items-ref-scale)),
+        calc(419px * var(--prize-panel-items-ref-scale))
+      ) *
+      var(--prize-panel-art-h, 197) / 1024 * 0.72 * var(--prize-panel-items-mul, 0.85)
+  );
+  --prize-panel-rise-offset: min(-68px, -14vh);
+  --petard-size: min(28.8vh, 156px);
+}
+
+html.is-touch.game-landscape .top-left-controls {
+  left: max(
+    0px,
+    calc(
+      var(--edge-x) + var(--top-left-nudge-x, 0px) +
+        env(safe-area-inset-left, 0px)
+    )
+  );
+  top: max(var(--ui-top), env(safe-area-inset-top, 8px));
+  gap: 6px;
+  max-width: none;
+  align-items: flex-start;
+}
+
+html.is-touch.game-landscape .btn-close {
+  right: max(
+    2px,
+    calc(
+      var(--edge-x) - var(--close-nudge-x, 0px) +
+        env(safe-area-inset-right, 0px)
+    )
+  );
+  top: max(var(--ui-top), env(safe-area-inset-top, 8px));
+}
+
+html.is-touch.game-landscape .btn-info,
+html.is-touch.game-landscape .btn-close {
+  width: 52px;
+  height: 52px;
+}
+
+html.is-touch.game-landscape .meter-wrap,
+html:not(.is-touch) .iphone .meter-wrap {
+  height: calc(56px * 1.15);
+  transform: translateY(-5%);
+}
+
+html.is-touch.game-landscape .meter-value,
+html:not(.is-touch) .iphone .meter-value {
+  font-size: calc(19px * 1.15);
+}
+
+html.is-touch.game-landscape .header-wrap {
+  left: 50%;
+  top: calc(0.8% + 10px);
+  transform: translateX(-50%);
+  width: var(--header-w);
+  max-width: calc(100% - 128px);
+}
+
+html.is-touch.game-landscape .header-img {
+  width: 100%;
+  height: auto;
+  min-height: 0;
+  max-height: none;
+  object-fit: contain;
+}
+
+html.is-touch.game-landscape .prize-panel-wrap {
+  top: var(--prize-panel-top);
+  bottom: auto;
+  width: min(var(--prize-panel-w), calc(100vw - 12px));
+  max-width: calc(419px * var(--prize-panel-scale));
+  height: auto;
+  aspect-ratio: 1024 / var(--prize-panel-art-h, 208);
+  transform: translateX(-50%) translateY(0);
+  transform-origin: 50% 0%;
+}
+
+html.is-touch.game-landscape .prize-panel-wrap.intro-hidden[data-intro="panel"] {
+  transform: translateX(-50%);
+}
+
+html.is-touch.game-landscape .prize-panel-wrap.visible {
+  animation: prizePanelFadeIn var(--prize-panel-rise-duration, 0.85s) ease both;
+}
+
+html.is-touch.game-landscape .prize-panel {
+  --prize-panel-items-top: 44%;
+  --prize-panel-items-drop: -12px;
+}
+
+html.is-touch.game-landscape .prize-panel-items,
+html.is-touch.game-landscape #prizePanelItems {
+  --prize-panel-items-drop: -12px;
+  top: var(--prize-panel-items-top, 43%);
+  left: 0;
+  right: 0;
+  height: var(--prize-icon-h);
+  transform: translateY(-50%)
+    translateY(var(--prize-panel-items-drop, -10px))
+    translateX(var(--prize-panel-items-nudge-x, 5px));
+  align-items: flex-end;
+  justify-content: center;
+}
+
+html.is-touch.game-landscape .prize-panel-items .panel-prize {
+  height: var(--prize-icon-h);
+  align-items: flex-end;
+}
+
+html.is-touch.game-landscape .prize-panel-items .panel-prize-img {
+  max-height: calc(var(--prize-icon-h) * var(--panel-prize-size-mul, 1.1));
+}
+
+/* Touch landscape: petard row Y (shared with idle-hint pulse) */
+html.is-touch.game-landscape .slot[data-index="1"],
+html.is-touch.game-landscape .slot[data-index="3"],
+html.is-touch.game-landscape .slot[data-index="5"],
+html.is-touch.game-landscape .slot[data-index="7"] {
+  --petard-slot-x: -32px;
+  --petard-slot-y: calc(-50% - 2.5vh + var(--petard-row-drop, 0px));
+}
+
+html.is-touch.game-landscape .slot[data-index="0"],
+html.is-touch.game-landscape .slot[data-index="2"],
+html.is-touch.game-landscape .slot[data-index="4"],
+html.is-touch.game-landscape .slot[data-index="6"] {
+  --petard-slot-y: calc(
+    -50% - 2.5vh + var(--petard-row-drop, 0px) - var(--petard-lower-row-lift, 0px) +
+      var(--petard-lower-row-drop, 0px)
+  );
+}
+
+/* Touch: petard 4 (index 3) */
+html.is-touch.game-landscape .slot[data-index="3"] {
+  --petard-slot-y: calc(-50% - 2.5vh + var(--petard-row-drop, 0px) + 13px);
+}
+
+html.is-touch.game-landscape #field .slot[data-index="3"] .slot-inner {
+  translate: 0 -8px;
+}
+
+/* Touch landscape: reward character faces −15% */
+html.is-touch.game-landscape .stage {
+  --character-face-mul: 0.85;
+  --character-reward-bottom: 10px;
+  --petard-row-drop: 12px;
+  --petard-lower-row-lift: 20px;
+  --petard-lower-row-drop: 14px;
+}
+
+html.is-touch.game-landscape .slot.show-special-reward img.done {
+  bottom: var(--character-reward-bottom, var(--slot-sku-bottom, 0px));
+}
+
+/* Touch: upper petard row — lift character faces 10px (slots 2,4,6,8 → index 1,3,5,7) */
+html.is-touch.game-landscape .slot[data-index="1"].show-special-reward img.done,
+html.is-touch.game-landscape .slot[data-index="3"].show-special-reward img.done,
+html.is-touch.game-landscape .slot[data-index="5"].show-special-reward img.done,
+html.is-touch.game-landscape .slot[data-index="7"].show-special-reward img.done {
+  bottom: calc(var(--character-reward-bottom, 10px) + 10px);
+}
+
+html.is-touch.game-landscape .slot.reward-sam img.done {
+  width: calc(var(--petard-size) * 1.017 * 1.15 * 0.81 * var(--character-face-mul));
+  height: calc(var(--petard-size) * 1.017 * 1.15 * 0.81 * var(--character-face-mul));
+  margin-left: -8px;
+}
+
+/* Touch: petards 1 & 3 — lift prize + petard (not petard 2) */
+html.is-touch.game-landscape #field .slot[data-index="0"] img.prize,
+html.is-touch.game-landscape #field .slot[data-index="0"] img.cube,
+html.is-touch.game-landscape #field .slot[data-index="2"] img.prize,
+html.is-touch.game-landscape #field .slot[data-index="2"] img.cube {
+  bottom: calc(var(--slot-sku-bottom, 0px) + 10px);
+}
+
+html.is-touch.game-landscape #field .slot[data-index="0"].show-special-reward img.done,
+html.is-touch.game-landscape #field .slot.reward-sam.show-special-reward img.done {
+  bottom: calc(var(--character-reward-bottom, 10px) + 32px);
+}
+
+html.is-touch.game-landscape #field .slot[data-index="2"].show-special-reward img.done {
+  bottom: calc(var(--character-reward-bottom, 10px) + 8px);
+}
+
+/* Touch: petard 2 — lift prize + petard */
+html.is-touch.game-landscape #field .slot[data-index="1"] img.prize,
+html.is-touch.game-landscape #field .slot[data-index="1"] img.cube {
+  bottom: calc(var(--slot-sku-bottom, 0px) + 28px);
+}
+
+html.is-touch.game-landscape #field .slot[data-index="1"].show-special-reward img.done {
+  bottom: calc(var(--character-reward-bottom, 10px) + 24px);
+}
+
+/* Touch: petard 8 — lift prize + petard */
+html.is-touch.game-landscape #field .slot[data-index="7"] img.prize,
+html.is-touch.game-landscape #field .slot[data-index="7"] img.cube {
+  bottom: calc(var(--slot-sku-bottom, 0px) + 26px);
+}
+
+html.is-touch.game-landscape #field .slot[data-index="7"].show-special-reward img.done {
+  bottom: calc(var(--character-reward-bottom, 10px) + 32px);
+}
+
+/* Touch: petard 6 — lift on field */
+html.is-touch.game-landscape #field .slot[data-index="5"] img.prize,
+html.is-touch.game-landscape #field .slot[data-index="5"] img.cube {
+  bottom: calc(var(--slot-sku-bottom, 0px) + 32px);
+}
+
+html.is-touch.game-landscape #field .slot[data-index="5"].show-special-reward img.done {
+  bottom: calc(var(--character-reward-bottom, 10px) + 38px);
+}
+
+html.is-touch.game-landscape .slot.reward-mia img.done {
+  width: calc(var(--petard-size) * 1.22 * var(--character-face-mul));
+  height: calc(var(--petard-size) * 1.22 * var(--character-face-mul));
+}
+
+html.is-touch.game-landscape .slot.reward-mia.show-special-reward .slot-inner {
+  translate: 0 -2px;
+}
+
+html.is-touch.game-landscape .slot.reward-sanny img.done {
+  width: calc(var(--petard-size) * 1.1 * var(--character-face-mul));
+  height: calc(var(--petard-size) * 1.1 * var(--character-face-mul));
+  margin-left: -4px;
+}
+
+html.is-touch.game-landscape .slot.reward-hoppy img.done {
+  width: calc(var(--petard-size) * 0.82 * var(--character-face-mul));
+  height: calc(var(--petard-size) * 0.82 * var(--character-face-mul));
+  margin-left: 10px;
+}
+
+html.is-touch.game-landscape .slot.reward-hoppy.show-special-reward img.done {
+  bottom: calc(
+    var(--character-reward-bottom, 10px) + var(--petard-size) * (1 - 0.82 * var(--character-face-mul, 1)) / 2
+  );
+}
+
+html.is-touch.game-landscape .slot.reward-hoppy.show-special-reward .slot-inner {
+  translate: 24px -7px;
+}
+
+html.is-touch.game-landscape .slot.reward-oscar img.done {
+  width: calc(var(--petard-size) * 1.05 * var(--character-face-mul));
+  height: calc(var(--petard-size) * 1.05 * var(--character-face-mul));
+  margin-left: -6px;
+}
+
+html.is-touch.game-landscape #field .slot.reward-oscar.show-special-reward .slot-inner {
+  transform: rotate(var(--slot-tilt, 8deg)) translateY(-22px) !important;
+}
+
+html.is-touch.game-landscape .slot.reward-peggy img.done {
+  width: calc(var(--petard-size) * 1.116 * var(--character-face-mul));
+  height: calc(var(--petard-size) * 1.116 * var(--character-face-mul));
+}
+
+html.is-touch.game-landscape #field .slot.reward-peggy.show-special-reward .slot-inner {
+  transform: rotate(var(--slot-tilt, 8deg)) translateY(22px) !important;
+}
+
+html.is-touch.game-landscape .slot.reward-carrie img.done {
+  width: calc(var(--petard-size) * 1.14 * var(--character-face-mul));
+  height: calc(var(--petard-size) * 1.14 * var(--character-face-mul));
+}
+
+html.is-touch.game-landscape .slot.reward-mole img.done {
+  width: calc(var(--petard-size) * 1.05 * var(--character-face-mul));
+  height: calc(var(--petard-size) * 1.05 * var(--character-face-mul));
+}
+
+html.is-touch.game-landscape .slot.reward-mole.show-special-reward .slot-inner {
+  translate: 0 -16px;
+}
+
+html.is-touch.game-landscape .info-swing img {
+  width: 100%;
+  height: auto;
+  max-height: none;
+}
+
+.stars-layer {
+  display: none;
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.star-twinkle {
+  position: absolute;
+  left: var(--star-x, 50%);
+  top: var(--star-y, 20%);
+  width: var(--star-sz, 2px);
+  height: var(--star-sz, 2px);
+  border-radius: 50%;
+  background: radial-gradient(
+    circle at 40% 40%,
+    #fff 0%,
+    rgba(255, 255, 255, 0.85) 55%,
+    rgba(255, 255, 255, 0.2) 100%
+  );
+  box-shadow:
+    0 0 calc(var(--star-sz, 2px) * 2.6) rgba(255, 255, 255, 0.92),
+    0 0 calc(var(--star-sz, 2px) * 5.2) rgba(200, 220, 255, 0.5);
+  opacity: var(--star-dim, 0.45);
+  transform: translate(-50%, -50%);
+  animation: starTwinkle var(--star-dur, 2.4s) ease-in-out infinite;
+  animation-delay: var(--star-delay, 0s);
+  will-change: opacity, transform;
+}
+
+.star-twinkle.star-soft {
+  box-shadow:
+    0 0 calc(var(--star-sz, 2px) * 2) rgba(255, 248, 230, 0.72),
+    0 0 calc(var(--star-sz, 2px) * 4) rgba(255, 200, 220, 0.35);
+}
+
+@keyframes starTwinkle {
+  0%,
+  100% {
+    opacity: calc(var(--star-dim, 0.35) * 0.55);
+    transform: translate(-50%, -50%) scale(0.62);
+    filter: brightness(0.85);
+  }
+  35% {
+    opacity: calc(var(--star-dim, 0.35) + 0.55);
+    transform: translate(-50%, -50%) scale(1.08);
+    filter: brightness(1.15);
+  }
+  50% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.32);
+    filter: brightness(1.35);
+  }
+  65% {
+    opacity: calc(var(--star-dim, 0.35) + 0.45);
+    transform: translate(-50%, -50%) scale(0.9);
+    filter: brightness(1.05);
+  }
+}
+
+.snow-layer {
+  display: none;
+  position: absolute;
+  inset: 0;
+  z-index: 6;
+  pointer-events: none;
+  overflow: hidden;
+  container-type: size;
+}
+
+.snowflake {
+  position: absolute;
+  top: -4%;
+  left: var(--snow-x, 50%);
+  width: var(--snow-sz, 3.4px);
+  height: var(--snow-sz, 3.4px);
+  border-radius: 50%;
+  opacity: var(--snow-opacity, 0.5);
+  background: radial-gradient(
+    circle at 35% 35%,
+    #fff 0%,
+    rgba(255, 255, 255, 0.75) 45%,
+    rgba(255, 255, 255, 0.2) 100%
+  );
+  box-shadow: 0 0 2px rgba(255, 255, 255, 0.32);
+  animation: snowFall var(--snow-dur, 20s) linear infinite;
+  animation-delay: var(--snow-delay, 0s);
+  will-change: transform;
+}
+
+.snowflake.shape-dot {
+  border-radius: 50%;
+}
+
+.snowflake.shape-flake {
+  width: max(2px, calc(var(--snow-sz) * 0.18));
+  height: var(--snow-sz, 4px);
+  border-radius: 1px;
+  background: linear-gradient(
+    to bottom,
+    transparent 4%,
+    rgba(255, 255, 255, 0.95) 38%,
+    rgba(255, 255, 255, 0.95) 62%,
+    transparent 96%
+  );
+  box-shadow: 0 0 3px rgba(255, 255, 255, 0.45);
+}
+
+.snowflake.shape-flake::before,
+.snowflake.shape-flake::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: max(2px, calc(var(--snow-sz) * 0.18));
+  height: var(--snow-sz);
+  border-radius: 1px;
+  background: linear-gradient(
+    to bottom,
+    transparent 4%,
+    rgba(255, 255, 255, 0.92) 38%,
+    rgba(255, 255, 255, 0.92) 62%,
+    transparent 96%
+  );
+  box-shadow: 0 0 2px rgba(255, 255, 255, 0.35);
+  transform-origin: center center;
+  transform: translate(-50%, -50%) rotate(60deg);
+  pointer-events: none;
+}
+
+.snowflake.shape-flake::after {
+  transform: translate(-50%, -50%) rotate(-60deg);
+}
+
+@keyframes snowFall {
+  0% {
+    transform: translate3d(0, 0, 0) rotate(0deg);
+  }
+  100% {
+    transform: translate3d(var(--snow-drift, 0px), calc(100cqh + 16px), 0)
+      rotate(360deg);
+  }
+}
+
+.stage {
+  --edge-x: max(3.85%, 10px);
+  --ui-top: 12px;
+  --info-panel-scale: 0.85;
+  --info-meter-gap: 6px;
+  --info-panel-shift-x: -10px;
+  --info-panel-shift-y: -24px;
+  --top-left-nudge-x: -16px;
+  --close-nudge-x: 14px;
+  --header-est-h: min(14cqw, 62px);
+  --prize-panel-top: calc(0.8% + 10px + var(--header-est-h) + 28px);
+  --field-top: calc(var(--prize-panel-top) + var(--prize-panel-h) + 10px);
+  --header-w: 42.32%;
+  --prize-panel-rise-offset: -min(88px, 16vh);
+  --prize-panel-rise-duration: 1.15s;
+  --prize-panel-items-drop: -8px;
+  --prize-panel-items-top: 52%;
+  --prize-panel-w: 551px;
+  --prize-panel-art-h: 208;
+  --prize-panel-fill-h: 197;
+  --prize-panel-h: calc(var(--prize-panel-w) * var(--prize-panel-art-h) / 1024);
+  --prize-icon-h: calc(var(--prize-panel-h) * 0.72);
+  --prize-panel-gap: 1px;
+  --prize-panel-item-overlap: 2px;
+  --prize-panel-items-shift: -50%;
+  --prize-panel-items-pad-x: 2.2%;
+  --prize-panel-items-nudge-x: 5px;
+  --petard-size: min(27.3cqh, 157px);
+  --petard-row-drop: 22px;
+  --petard-lower-row-lift: 20px;
+  --petard-lower-row-drop: 12px;
+  --character-face-lift: 24px;
+  --character-upper-row-drop: 14px;
+  --lower-row-prize-lift: 14px;
+  --slot-sku-bottom: 0px;
+  --character-reward-bottom: var(--slot-sku-bottom, 0px);
+  --panel-prize-size-mul: 1.1;
+
+  position: relative;
+  width: 100%;
+  height: 100%;
+  flex: 1;
+  align-self: stretch;
+  background: transparent;
+  overflow: hidden;
+  container-type: size;
+}
+
+.top-bar {
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 18%;
+  min-height: 72px;
+  z-index: 30;
+  pointer-events: none;
+  overflow: visible;
+}
+
+.top-left-controls {
+  position: absolute;
+  left: calc(var(--edge-x) + var(--top-left-nudge-x, 0px));
+  top: max(var(--ui-top), 10px);
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  z-index: 210;
+  pointer-events: auto;
+}
+
+.btn-system {
+  padding: 0;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  pointer-events: auto;
+}
+
+.btn-info {
+  width: 52px;
+  height: 52px;
+  flex-shrink: 0;
+}
+
+.btn-close {
+  position: absolute;
+  right: calc(var(--edge-x) - var(--close-nudge-x, 0px));
+  top: max(var(--ui-top), 10px);
+  width: 52px;
+  height: 52px;
+  z-index: 210;
+}
+
+.btn-system img {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.header-wrap {
+  position: absolute;
+  left: 50%;
+  top: calc(0.8% + 10px);
+  transform: translateX(-50%);
+  width: var(--header-w);
+  pointer-events: none;
+  z-index: 35;
+}
+
+.header-img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.final-prize-wrap {
+  position: absolute;
+  top: var(--prize-panel-top);
+  right: max(4px, env(safe-area-inset-right, 0px));
+  height: calc(100% - var(--prize-panel-top) - 6px);
+  z-index: 26;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.final-prize-wrap img {
+  display: block;
+  height: 100%;
+  width: auto;
+  object-fit: contain;
+  object-position: right top;
+}
+
+.final-prize-wrap.visible {
+  animation: prizePanelFadeIn var(--prize-panel-rise-duration, 0.85s) ease both;
+}
+
+.stage--game-complete .final-prize-wrap {
+  animation: none;
+  opacity: 0;
+}
+
+.prize-panel-wrap {
+  position: absolute;
+  left: 50%;
+  top: var(--prize-panel-top);
+  bottom: auto;
+  transform: translateX(-50%);
+  transform-origin: 50% 0%;
+  width: min(var(--prize-panel-w), calc(100% - 16px));
+  aspect-ratio: 1024 / var(--prize-panel-art-h, 197);
+  z-index: 25;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.prize-panel-wrap.intro-hidden[data-intro="panel"] {
+  opacity: 0;
+  pointer-events: none;
+  transform: translateX(-50%);
+}
+
+/* Recompletion: tuck prize panel off-screen above. */
+.stage--game-complete .prize-panel-wrap.visible {
+  animation: none;
+  top: var(--prize-panel-top);
+  bottom: auto;
+  transform: translate(-50%, calc(-100% - 28px));
+  opacity: 0;
+  pointer-events: none;
+}
+
+.prize-panel-wrap.visible {
+  animation: prizePanelFadeIn var(--prize-panel-rise-duration, 0.85s) ease both;
+  pointer-events: auto;
+}
+
+@keyframes prizePanelFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.prize-panel {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  /* frame.png 1024×208; fill.png 1024×197 — width aligned to frame / shine mask */
+  --prize-panel-art-h: 208;
+  --prize-panel-fill-h: 197;
+  --prize-panel-items-top: 45%;
+  --prize-panel-items-drop: -8px;
+  --panel-char-h-max: 1.22;
+}
+
+/* Layer stack: fill → frame (+ shine mask) → prize icons */
+.prize-panel-art {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.prize-panel-stack {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  grid-template: 1fr / 1fr;
+  place-items: stretch;
+}
+
+.prize-panel-fill,
+.prize-panel-frame-layer {
+  grid-area: 1 / 1;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  min-height: 0;
+}
+
+.prize-panel-frame-layer {
+  z-index: 2;
+  isolation: isolate;
+}
+
+.prize-panel-frame,
+.prize-panel-fill {
+  display: block;
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
+  pointer-events: none;
+}
+
+.prize-panel-fill {
+  z-index: 1;
+}
+
+.prize-panel-wrap.visible .prize-panel-shine {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background: linear-gradient(
+    100deg,
+    transparent 0%,
+    transparent 38%,
+    rgba(255, 245, 200, 0.55) 45%,
+    rgba(255, 255, 255, 1) 48.5%,
+    rgba(255, 252, 235, 1) 50%,
+    rgba(255, 255, 255, 1) 51.5%,
+    rgba(255, 235, 160, 0.65) 55%,
+    transparent 62%,
+    transparent 100%
+  );
+  background-size: 240% 100%;
+  mix-blend-mode: plus-lighter;
+  opacity: 1;
+  filter: brightness(1.12);
+  -webkit-mask-image: url("../Assets/Prize%20Panel%20frame.png?v=2");
+  mask-image: url("../Assets/Prize%20Panel%20frame.png?v=2");
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  -webkit-mask-mode: alpha;
+  mask-mode: alpha;
+  animation: prizePanelGoldGlint 3.6s ease-in-out infinite;
+}
+
+@keyframes prizePanelGoldGlint {
+  0% {
+    background-position: 125% 50%;
+  }
+  100% {
+    background-position: -25% 50%;
+  }
+}
+
+#prizePanelItems.prize-panel-items,
+.prize-panel-items {
+  position: absolute;
+  z-index: 3;
+  left: 0;
+  right: 0;
+  top: var(--prize-panel-items-top, 44%);
+  transform: translateY(-50%)
+    translateY(var(--prize-panel-items-drop, -4px))
+    translateX(var(--prize-panel-items-nudge-x, 5px));
+  box-sizing: border-box;
+  width: 100%;
+  height: var(--prize-icon-h);
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
+  justify-content: center;
+  gap: var(--prize-panel-gap);
+  padding: 0 var(--prize-panel-items-pad-x, 1.4%);
+  overflow: hidden;
+}
+
+.prize-panel-items .panel-prize {
+  position: relative;
+  flex: 1 1 0;
+  min-width: 0;
+  max-width: calc(
+    (100% - var(--prize-panel-gap) * 7) / 8 + var(--prize-panel-item-overlap, 0px)
+  );
+  margin: 0 calc(var(--prize-panel-item-overlap, 0px) * -1);
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  height: var(--prize-icon-h);
+  transition: opacity 0.35s ease, filter 0.35s ease;
+}
+
+.prize-panel-items .panel-prize-img {
+  display: block;
+  height: calc(var(--prize-icon-h) * var(--panel-prize-size-mul, 1.1));
+  width: auto;
+  max-width: 100%;
+  object-fit: contain;
+  object-position: center bottom;
+  transform: translateY(0);
+  transition: opacity 0.35s ease, transform 0.35s ease;
+}
+
+.prize-panel-items .panel-prize-done {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  height: 58%;
+  width: auto;
+  max-width: 92%;
+  object-fit: contain;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.prize-panel-items .panel-prize.claimed {
+  transform: none;
+}
+
+.prize-panel-items .panel-prize.claimed .panel-prize-img {
+  opacity: 0.5;
+}
+
+.prize-panel-items .panel-prize.claimed .panel-prize-done {
+  animation: panelDonePop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+@keyframes panelDonePop {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.25);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+.meter-wrap {
+  position: relative;
+  display: inline-block;
+  height: 56px;
+  flex-shrink: 0;
+  opacity: 1;
+  visibility: visible;
+}
+
+.meter-bg {
+  height: 100%;
+  width: auto;
+  display: block;
+}
+
+.meter-value {
+  position: absolute;
+  left: 37%;
+  right: 5%;
+  top: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 19px;
+  font-weight: 800;
+  line-height: 1;
+  color: #fff;
+  text-shadow: 0 2px 0 #1a1a1a, 0 0 8px rgba(0, 0, 0, 0.8);
+  letter-spacing: 0.02em;
+  pointer-events: none;
+}
+
+.info-panel-wrap {
+  position: relative;
+  flex: 0 0 auto;
+  align-self: flex-start;
+  margin-left: calc(var(--info-meter-gap, 6px) + var(--info-panel-shift-x, 0px));
+  margin-top: var(--info-panel-shift-y, 0px);
+  width: auto;
+  max-width: calc(124px * var(--info-panel-scale, 1));
+  transform: translateY(-130%);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.info-panel-wrap.dropped {
+  pointer-events: auto;
+  cursor: pointer;
+  animation: infoDrop 0.85s cubic-bezier(0.34, 1.4, 0.64, 1) forwards;
+}
+
+.info-panel-wrap.dropped:not(.info-intro-swing-done) .info-swing {
+  animation: infoSwing 2.2s ease-in-out 0.85s 2;
+}
+
+.info-panel-wrap.dropped .info-swing.info-user-swing {
+  animation: infoSwing 1s ease-in-out !important;
+}
+
+.info-panel-wrap.dropped.info-intro-swing-done .info-swing:not(.info-user-swing) {
+  animation: none;
+  transform: rotate(0deg);
+}
+
+.info-swing {
+  transform-origin: 50% 0;
+}
+
+.info-swing img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+@keyframes infoDrop {
+  from {
+    opacity: 0;
+    transform: translateY(-130%);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes infoDropAnchored {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -130%);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+}
+
+@keyframes infoSwing {
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(4deg);
+  }
+  75% {
+    transform: rotate(-4deg);
+  }
+}
+
+.field {
+  position: absolute;
+  top: var(--field-top, 0);
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 10;
+}
+
+.slot {
+  position: absolute;
+  width: 11.5%;
+  min-width: 52px;
+  max-width: 136px;
+  height: var(--petard-size);
+  --petard-slot-x: 0px;
+  --petard-slot-y: calc(-50% + var(--petard-row-drop, 0px));
+  transform: translate(calc(-50% + var(--petard-slot-x)), var(--petard-slot-y));
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+/* Upper row petards 2, 4, 6, 8 (indices 1, 3, 5, 7) — shift left as a row */
+.slot[data-index="1"],
+.slot[data-index="3"],
+.slot[data-index="5"],
+.slot[data-index="7"] {
+  --petard-slot-x: -28px;
+}
+
+.slot[data-index="0"],
+.slot[data-index="2"],
+.slot[data-index="4"],
+.slot[data-index="6"] {
+  --petard-slot-y: calc(
+    -50% + var(--petard-row-drop, 0px) - var(--petard-lower-row-lift, 0px) +
+      var(--petard-lower-row-drop, 0px)
+  );
+}
+
+.slot img.petard {
+  width: var(--petard-size);
+  height: var(--petard-size);
+  object-fit: contain;
+  object-position: center bottom;
+  filter: drop-shadow(0 6px 10px rgba(0, 0, 0, 0.35));
+}
+
+/* Petard 6.png (slot index 5) */
+.slot[data-index="5"] {
+  height: calc(var(--petard-size) * 1.12);
+}
+
+.slot[data-index="5"] img.petard,
+.slot[data-index="5"] img.prize,
+.slot[data-index="5"] img.cube,
+.slot[data-index="5"] img.done {
+  width: calc(var(--petard-size) * 1.12);
+  height: calc(var(--petard-size) * 1.12);
+}
+
+/* Petard 8.png (slot index 7) */
+.slot[data-index="7"] {
+  height: calc(var(--petard-size) * 1.15);
+}
+
+.slot[data-index="7"] img.petard,
+.slot[data-index="7"] img.prize,
+.slot[data-index="7"] img.cube,
+.slot[data-index="7"] img.done {
+  width: calc(var(--petard-size) * 1.15);
+  height: calc(var(--petard-size) * 1.15);
+}
+
+.slot.opening img.cube {
+  visibility: hidden !important;
+  opacity: 0 !important;
+  transition: none !important;
+  animation: none !important;
+}
+
+.slot.intro-hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Petard fly-in positions are driven in JS (1s, tilt-aligned arc) */
+.slot.petard-fly-in {
+  z-index: 12;
+  opacity: 1;
+  pointer-events: none;
+}
+
+.slot.petard-fly-in img.cube,
+.slot.petard-settling img.cube {
+  animation: none !important;
+}
+
+.slot-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: rotate(0deg);
+  --slot-tilt: 0deg;
+}
+
+.slot img.prize,
+.slot img.cube,
+.slot img.done {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  transform: translateX(-50%);
+  width: var(--petard-size);
+  height: var(--petard-size);
+  object-fit: contain;
+  object-position: center bottom;
+  pointer-events: none;
+}
+
+.slot img.prize {
+  z-index: 2;
+  bottom: var(--slot-sku-bottom, 0px);
+}
+
+/* Petards 1 & 3 — lift prize + petard (petard 2 uses default row height) */
+#field .slot[data-index="0"] img.prize,
+#field .slot[data-index="0"] img.cube,
+#field .slot[data-index="2"] img.prize,
+#field .slot[data-index="2"] img.cube {
+  bottom: calc(var(--slot-sku-bottom, 0px) + 10px);
+}
+
+#field .slot[data-index="0"].show-special-reward img.done,
+#field .slot.reward-sam.show-special-reward img.done {
+  bottom: calc(var(--character-reward-bottom, var(--slot-sku-bottom, 0px)) + 32px);
+}
+
+#field .slot[data-index="2"].show-special-reward img.done {
+  bottom: calc(var(--character-reward-bottom, var(--slot-sku-bottom, 0px)) + 8px);
+}
+
+/* Petard 2 — lift prize + petard */
+#field .slot[data-index="1"] img.prize,
+#field .slot[data-index="1"] img.cube {
+  bottom: calc(var(--slot-sku-bottom, 0px) + 28px);
+}
+
+#field .slot[data-index="1"].show-special-reward img.done {
+  bottom: calc(var(--character-reward-bottom, var(--slot-sku-bottom, 0px)) + 24px);
+}
+
+/* Petard 8 — lift prize + petard */
+#field .slot[data-index="7"] img.prize,
+#field .slot[data-index="7"] img.cube {
+  bottom: calc(var(--slot-sku-bottom, 0px) + 26px);
+}
+
+#field .slot[data-index="7"].show-special-reward img.done {
+  bottom: calc(var(--character-reward-bottom, var(--slot-sku-bottom, 0px)) + 32px);
+}
+
+/* Petard 6 — closed: slot-inner slightly lower (index 5) */
+#field .slot[data-index="5"]:not(.show-special-reward) .slot-inner {
+  translate: 0 14px;
+}
+
+html.is-touch.game-landscape #field .slot[data-index="5"]:not(.show-special-reward) .slot-inner {
+  translate: 0 14px;
+}
+
+/* Petard 6 — lift on field */
+#field .slot[data-index="5"] img.prize,
+#field .slot[data-index="5"] img.cube {
+  bottom: calc(var(--slot-sku-bottom, 0px) + 32px);
+}
+
+#field .slot[data-index="5"].show-special-reward img.done {
+  bottom: calc(var(--character-reward-bottom, var(--slot-sku-bottom, 0px)) + 38px);
+}
+
+.slot img.cube {
+  z-index: 3;
+  cursor: pointer;
+  pointer-events: auto;
+  transform: translateX(-50%);
+}
+
+.slot:not(.disabled):not(.opening):not(.intro-hidden):not(.petard-settling) img.cube {
+  animation: petardFloat var(--float-dur, 2.85s) ease-in-out infinite;
+  animation-delay: var(--float-delay, 0s);
+  animation-fill-mode: backwards;
+}
+
+@keyframes petardFloat {
+  0%,
+  100% {
+    transform: translateX(-50%) translateY(0);
+  }
+  50% {
+    transform: translateX(-50%) translateY(-10px);
+  }
+}
+
+.slot img.done {
+  z-index: 2;
+}
+
+.slot:not(.show-special-reward) img.done {
+  display: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+}
+
+/* Idle hint: brightness only — never override img.cube petardFloat (avoids jump after 1st pick) */
+.slot.idle-hint:not(.disabled):not(.opening) .slot-inner {
+  animation: slotInnerIdleGlow 1s ease-in-out;
+}
+
+@keyframes slotInnerIdleGlow {
+  0%,
+  100% {
+    filter: brightness(1);
+  }
+  50% {
+    filter: brightness(1.14);
+  }
+}
+
+.vfx-transform-burst {
+  width: 140px;
+  height: 140px;
+  opacity: 0.72;
+}
+
+.vfx-transform-flash {
+  inset: -8%;
+  animation: transformFlashPop 0.36s ease-out forwards;
+  opacity: 0.75;
+}
+
+.vfx-transform-burst .vfx-fw-rays.vfx-transform-rays {
+  width: 82%;
+  height: 82%;
+  opacity: 0.58;
+  animation: transformRaysShort 0.38s ease-out forwards;
+  -webkit-mask-image: radial-gradient(
+    circle at 50% 50%,
+    #000 8%,
+    rgba(0, 0, 0, 0.88) 22%,
+    rgba(0, 0, 0, 0.35) 34%,
+    transparent 42%
+  );
+  mask-image: radial-gradient(
+    circle at 50% 50%,
+    #000 8%,
+    rgba(0, 0, 0, 0.88) 22%,
+    rgba(0, 0, 0, 0.35) 34%,
+    transparent 42%
+  );
+}
+
+@keyframes transformRaysShort {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) rotate(-8deg) scale(0.32);
+  }
+  22% {
+    opacity: 0.7;
+    transform: translate(-50%, -50%) rotate(1deg) scale(0.52);
+  }
+  58% {
+    opacity: 0.38;
+    transform: translate(-50%, -50%) rotate(6deg) scale(0.62);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) rotate(9deg) scale(0.64);
+  }
+}
+
+@keyframes transformFlashPop {
+  0% {
+    opacity: 0;
+    transform: scale(0.35);
+  }
+  14% {
+    opacity: 0.72;
+    transform: scale(0.82);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.05);
+  }
+}
+
+.intro-visible {
+  opacity: 1 !important;
+}
+
+.intro-hidden[data-intro="header"] {
+  opacity: 1;
+}
+
+.intro-hidden[data-intro="panel"],
+.intro-hidden[data-intro="info"] {
+  opacity: 0;
+}
+
+.meter-wrap.visible {
+  opacity: 1;
+  transition: opacity 0.45s ease;
+}
+
+.hand-pointer {
+  position: absolute;
+  z-index: 50;
+  width: 72px;
+  height: auto;
+  pointer-events: none;
+  transform: translate(
+    calc(-42% + var(--hand-nudge-x, 0px)),
+    calc(-28% + var(--hand-nudge-y, 0px))
+  );
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+html.is-touch.game-landscape .hand-pointer,
+html:not(.is-touch) .iphone .hand-pointer {
+  --hand-nudge-x: 14px;
+}
+
+.hand-pointer.visible {
+  opacity: 1;
+}
+
+.hand-pointer img {
+  width: 100%;
+  display: block;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.5));
+}
+
+.hand-pointer.tapping img {
+  animation: handTap 0.55s ease-in-out infinite;
+}
+
+@keyframes handTap {
+  0%,
+  100% {
+    transform: translateY(0) scale(1);
+  }
+  45% {
+    transform: translateY(14px) scale(0.95);
+  }
+}
+
+.vfx-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 45;
+  pointer-events: none;
+  overflow: hidden;
+  contain: layout style paint;
+}
+
+.vfx-fw-canvas {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.game-complete-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 220;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  box-sizing: border-box;
+  background: rgba(0, 0, 0, 0.8);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition:
+    opacity 0.6s ease-out,
+    visibility 0s linear 0.6s;
+}
+
+.game-complete-overlay.is-visible {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transition: opacity 0.55s ease-in-out;
+}
+
+.game-complete-overlay:not(.is-visible) .game-complete-restart {
+  animation: none;
+  opacity: 0;
+  transform: scale(0.88);
+}
+
+.game-complete-restart {
+  display: block;
+  padding: 0;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  max-width: min(94%, 483px);
+  width: 100%;
+  line-height: 0;
+  transform: scale(0.88);
+  opacity: 0;
+  transition: transform 0.22s ease;
+}
+
+.game-complete-overlay.is-visible .game-complete-restart {
+  animation: gameCompletePopBounce 0.72s cubic-bezier(0.34, 1.45, 0.64, 1) 0.12s forwards;
+}
+
+.game-complete-restart:hover {
+  transform: scale(1.22);
+}
+
+.game-complete-overlay.is-visible .game-complete-restart:hover {
+  transform: scale(1.22);
+}
+
+@keyframes gameCompletePopBounce {
+  0% {
+    opacity: 0;
+    transform: scale(0.82);
+  }
+  52% {
+    opacity: 1;
+    transform: scale(1.14);
+  }
+  72% {
+    transform: scale(0.97);
+  }
+  88% {
+    transform: scale(1.06);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1.104);
+  }
+}
+
+.game-complete-restart:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.75);
+  outline-offset: 4px;
+}
+
+.game-complete-restart img {
+  width: 100%;
+  height: auto;
+  display: block;
+  filter: drop-shadow(0 8px 24px rgba(0, 0, 0, 0.55));
+}
+
+html.is-touch.game-landscape .game-complete-overlay {
+  padding: 10px;
+}
+
+html.is-touch.game-landscape .game-complete-restart {
+  max-width: min(82vw, 420px);
+}
+
+html.is-touch.game-landscape .game-complete-overlay.is-visible .game-complete-restart {
+  animation: gameCompletePopBounceMobile 0.72s cubic-bezier(0.34, 1.45, 0.64, 1) 0.12s
+    forwards;
+}
+
+html.is-touch.game-landscape .game-complete-overlay.is-visible .game-complete-restart:hover {
+  transform: scale(1.02);
+}
+
+@keyframes gameCompletePopBounceMobile {
+  0% {
+    opacity: 0;
+    transform: scale(0.78);
+  }
+  52% {
+    opacity: 1;
+    transform: scale(1.02);
+  }
+  72% {
+    transform: scale(0.94);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1.06);
+  }
+}
+
+.vfx-burst {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  width: 175px;
+  height: 175px;
+}
+
+.vfx-burst-transform {
+  width: 140px;
+  height: 140px;
+}
+
+/* Prize → character: camera strobe at burst point, face-sized */
+.vfx-camera-flash {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: calc(var(--petard-size, 120px) * 1.12);
+  height: calc(var(--petard-size, 120px) * 1.12);
+  transform: translate(-50%, -52%);
+  border-radius: 50%;
+  z-index: 56;
+  pointer-events: none;
+  background: radial-gradient(
+    circle,
+    rgba(255, 255, 255, 0.98) 0%,
+    rgba(255, 255, 255, 0.88) 28%,
+    rgba(255, 255, 255, 0.55) 48%,
+    rgba(255, 255, 255, 0.22) 68%,
+    rgba(255, 255, 255, 0.06) 82%,
+    transparent 100%
+  );
+  mix-blend-mode: screen;
+  filter: blur(14px);
+  animation: vfxCameraFlashLocal 0.46s cubic-bezier(0.12, 0.82, 0.22, 1) forwards;
+}
+
+@keyframes vfxCameraFlashLocal {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -52%) scale(0.55);
+  }
+  8% {
+    opacity: 1;
+    transform: translate(-50%, -52%) scale(1.04);
+  }
+  24% {
+    opacity: 0.9;
+    transform: translate(-50%, -52%) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -52%) scale(1.06);
+  }
+}
+
+.vfx-flash {
+  position: absolute;
+  inset: -8%;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(255, 255, 255, 0.98) 0%,
+    rgba(255, 250, 235, 0.7) 28%,
+    rgba(255, 220, 140, 0.18) 52%,
+    transparent 78%
+  );
+  mix-blend-mode: screen;
+  animation: vfxFlash 0.62s ease-out forwards;
+}
+
+@keyframes vfxFlash {
+  0% {
+    opacity: 0;
+    transform: scale(0.2);
+  }
+  14% {
+    opacity: 1;
+    transform: scale(0.88);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.15);
+  }
+}
+
+.vfx-rays-wrap {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.vfx-rays {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 108%;
+  height: 108%;
+  transform-origin: 50% 50%;
+  pointer-events: none;
+}
+
+.vfx-rays-primary {
+  background: repeating-conic-gradient(
+    from -8deg at 50% 50%,
+    transparent 0deg 14deg,
+    rgba(255, 248, 230, 0.06) 14deg 16deg,
+    rgba(255, 228, 160, 0.38) 16deg 18.5deg,
+    rgba(255, 255, 255, 0.72) 18.5deg 19.5deg,
+    rgba(255, 228, 160, 0.38) 19.5deg 22deg,
+    rgba(255, 248, 230, 0.06) 22deg 24deg,
+    transparent 24deg 40deg
+  );
+  filter: blur(0.35px);
+  -webkit-mask-image: radial-gradient(
+    circle at 50% 50%,
+    #000 0%,
+    #000 12%,
+    rgba(0, 0, 0, 0.85) 32%,
+    rgba(0, 0, 0, 0.4) 50%,
+    transparent 62%
+  );
+  mask-image: radial-gradient(
+    circle at 50% 50%,
+    #000 0%,
+    #000 12%,
+    rgba(0, 0, 0, 0.85) 32%,
+    rgba(0, 0, 0, 0.4) 50%,
+    transparent 62%
+  );
+  animation: vfxRaysPrimary 0.92s cubic-bezier(0.25, 0.9, 0.35, 1) forwards;
+}
+
+.vfx-rays-secondary {
+  width: 118%;
+  height: 118%;
+  background: repeating-conic-gradient(
+    from 14deg at 50% 50%,
+    transparent 0deg 20deg,
+    rgba(255, 190, 120, 0.12) 20deg 22deg,
+    rgba(255, 240, 200, 0.35) 22deg 23.5deg,
+    rgba(200, 230, 255, 0.22) 23.5deg 24.5deg,
+    rgba(255, 240, 200, 0.35) 24.5deg 26deg,
+    rgba(255, 190, 120, 0.12) 26deg 28deg,
+    transparent 28deg 45deg
+  );
+  filter: blur(1.8px);
+  mix-blend-mode: screen;
+  opacity: 0.85;
+  -webkit-mask-image: radial-gradient(
+    circle at 50% 50%,
+    transparent 0%,
+    #000 22%,
+    rgba(0, 0, 0, 0.55) 48%,
+    transparent 64%
+  );
+  mask-image: radial-gradient(
+    circle at 50% 50%,
+    transparent 0%,
+    #000 22%,
+    rgba(0, 0, 0, 0.55) 48%,
+    transparent 64%
+  );
+  animation: vfxRaysSecondary 1s ease-out forwards;
+}
+
+.vfx-rays-core {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 32%;
+  height: 32%;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(255, 255, 255, 0.98) 0%,
+    rgba(255, 248, 220, 0.75) 42%,
+    rgba(255, 210, 130, 0.15) 68%,
+    transparent 100%
+  );
+  mix-blend-mode: screen;
+  animation: vfxRaysCore 0.82s ease-out forwards;
+}
+
+@keyframes vfxRaysPrimary {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) rotate(-14deg) scale(0.35);
+  }
+  20% {
+    opacity: 0.95;
+    transform: translate(-50%, -50%) rotate(-2deg) scale(0.78);
+  }
+  45% {
+    opacity: 0.88;
+    transform: translate(-50%, -50%) rotate(10deg) scale(0.92);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) rotate(28deg) scale(1.04);
+  }
+}
+
+@keyframes vfxRaysSecondary {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) rotate(18deg) scale(0.38);
+  }
+  24% {
+    opacity: 0.75;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) rotate(-20deg) scale(1.02);
+  }
+}
+
+@keyframes vfxRaysCore {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.25);
+  }
+  16% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(0.95);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(1.2);
+  }
+}
+
+.vfx-fw-bloom {
+  position: absolute;
+  width: calc(152px * var(--bloom-scale, 1));
+  height: calc(152px * var(--bloom-scale, 1));
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  pointer-events: none;
+  background: radial-gradient(
+    circle at 50% 50%,
+    #fff 0%,
+    #fffef8 8%,
+    color-mix(in srgb, var(--fw-primary, #5cf) 88%, #fff) 20%,
+    color-mix(in srgb, var(--fw-primary, #5cf) 65%, transparent) 38%,
+    color-mix(in srgb, var(--fw-secondary, #f5a) 42%, transparent) 52%,
+    color-mix(in srgb, var(--fw-accent, var(--fw-primary)) 28%, transparent) 68%,
+    transparent 80%
+  );
+  box-shadow:
+    0 0 18px color-mix(in srgb, var(--fw-primary, #5cf) 75%, transparent),
+    0 0 42px color-mix(in srgb, var(--fw-secondary, #f5a) 50%, transparent),
+    0 0 68px color-mix(in srgb, var(--fw-primary, #5cf) 28%, transparent);
+  opacity: 0.95;
+  animation: fwBloomPop 0.37s ease-out forwards;
+}
+
+@keyframes fwBloomPop {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.15);
+  }
+  12% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(0.95);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(1.18);
+  }
+}
+
+.vfx-fw-ray-line {
+  position: absolute;
+  width: var(--ray-len, 80px);
+  height: 2px;
+  margin-top: -1px;
+  transform-origin: 0% 50%;
+  transform: rotate(var(--ray-deg, 0deg));
+  border-radius: 999px;
+  background: linear-gradient(
+    90deg,
+    var(--c2, #fff) 0%,
+    #fff 10%,
+    color-mix(in srgb, var(--c, #fff) 90%, #fff) 32%,
+    var(--c, #fff) 58%,
+    color-mix(in srgb, var(--c, #fff) 35%, transparent) 82%,
+    transparent 100%
+  );
+  box-shadow:
+    0 0 6px #fff,
+    0 0 14px var(--c, #fff),
+    0 0 32px color-mix(in srgb, var(--c, #fff) 72%, transparent);
+  animation: fwRayLine 0.43s cubic-bezier(0.12, 0.75, 0.22, 1) forwards;
+  pointer-events: none;
+}
+
+.vfx-fw-ray-line.is-willow {
+  height: 1.5px;
+  animation-name: fwRayLineWillow;
+}
+
+@keyframes fwRayLine {
+  0% {
+    opacity: 0;
+    width: 0;
+  }
+  14% {
+    opacity: 1;
+    width: calc(var(--ray-len) * 0.92);
+  }
+  100% {
+    opacity: 0;
+    width: var(--ray-len);
+  }
+}
+
+@keyframes fwRayLineWillow {
+  0% {
+    opacity: 0;
+    width: 0;
+    transform: rotate(var(--ray-deg, 0deg)) translateY(0);
+  }
+  14% {
+    opacity: 1;
+    width: calc(var(--ray-len) * 0.9);
+  }
+  100% {
+    opacity: 0;
+    width: var(--ray-len);
+    transform: rotate(var(--ray-deg, 0deg)) translateY(22px);
+  }
+}
+
+.vfx-fw-glint {
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  margin: -1.5px 0 0 -1.5px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #fff 0%, var(--c, #fff) 45%, transparent 72%);
+  box-shadow:
+    0 0 4px #fff,
+    0 0 12px var(--c, #fff),
+    0 0 26px color-mix(in srgb, var(--c, #fff) 70%, transparent);
+  animation: fwGlintFly var(--dur, 396ms) ease-out forwards;
+  pointer-events: none;
+}
+
+@keyframes fwGlintFly {
+  0% {
+    opacity: 0;
+    transform: translate(0, 0) scale(0.4);
+  }
+  12% {
+    opacity: 1;
+    transform: translate(calc(var(--tx) * 0.2), calc(var(--ty) * 0.18)) scale(1.2);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(var(--tx), calc(var(--ty) + 10px)) scale(0.15);
+  }
+}
+
+.vfx-spark {
+  position: absolute;
+  width: var(--sz, 12px);
+  height: var(--sz, 12px);
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #fff 0%, var(--c, #fff) 45%, var(--c, #fff) 100%);
+  box-shadow:
+    0 0 8px var(--c, #fff),
+    0 0 16px color-mix(in srgb, var(--c, #fff) 65%, transparent);
+  animation: sparkFly var(--dur, 0.6s) ease-out forwards;
+}
+
+.vfx-spark-glitter {
+  z-index: 57;
+  margin: calc(var(--sz, 6px) * -0.5) 0 0 calc(var(--sz, 6px) * -0.5);
+  background: radial-gradient(circle at 40% 35%, #fff 0%, #fff 35%, rgba(255, 255, 255, 0.5) 70%);
+  box-shadow:
+    0 0 6px #fff,
+    0 0 14px rgba(255, 255, 255, 0.95),
+    0 0 22px rgba(255, 255, 255, 0.45);
+  animation: sparkGlitterFly var(--dur, 0.45s) ease-out forwards;
+}
+
+@keyframes sparkGlitterFly {
+  0% {
+    opacity: 0;
+    transform: translate(0, 0) scale(0.35);
+  }
+  18% {
+    opacity: 1;
+    transform: translate(0, 0) scale(1.15);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(var(--tx), var(--ty)) scale(0.15);
+  }
+}
+
+@keyframes sparkFly {
+  from {
+    opacity: 1;
+    transform: translate(0, 0) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translate(var(--tx), var(--ty)) scale(0.2);
+  }
+}
+
+.reveal-prize {
+  position: absolute;
+  z-index: 46;
+  width: 12%;
+  max-width: 160px;
+  transform: translate(-50%, -100%);
+  transform-origin: 50% 100%;
+  object-fit: contain;
+  object-position: center bottom;
+  pointer-events: none;
+  animation: revealPrizePop 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+@keyframes revealPrizePop {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -100%) scale(0.2);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -100%) scale(1.15);
+  }
+}
+
+.reveal-prize.vanish {
+  animation: revealVanish 0.45s ease-in forwards;
+}
+
+@keyframes revealVanish {
+  0% {
+    opacity: 1;
+    transform: translate(-50%, -100%) scale(1.15);
+    filter: brightness(1);
+  }
+  40% {
+    filter: brightness(1.4);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -70%) scale(0.6);
+    filter: brightness(1.8);
+  }
+}
+
+.slot.waiting-first-pick img.cube {
+  pointer-events: none;
+  cursor: default;
+}
+
+.slot.disabled img.cube {
+  pointer-events: none;
+  cursor: default;
+  animation: none;
+  filter: brightness(0.85);
+}
+
+.slot.show-special-reward .slot-inner::before {
+  content: none;
+  display: none;
+}
+
+.slot.reward-sam.show-special-reward .slot-inner::before {
+  width: calc(var(--petard-size) * 1.075 * 1.15 * 0.81);
+  height: calc(var(--petard-size) * 1.075 * 1.15 * 0.81);
+  margin-left: 0;
+  bottom: 5%;
+}
+
+.slot.reward-sanny.show-special-reward .slot-inner::before {
+  width: calc(var(--petard-size) * 1.12);
+  height: calc(var(--petard-size) * 1.12);
+  margin-left: 0;
+  bottom: 5%;
+}
+
+.slot.show-special-reward img.done {
+  z-index: 4;
+  width: calc(var(--petard-size) * 1.4);
+  height: calc(var(--petard-size) * 1.4);
+  bottom: var(--character-reward-bottom, var(--slot-sku-bottom, 0px));
+  filter: brightness(1);
+  will-change: filter;
+  animation:
+    specialRewardFlashIn 0.35s cubic-bezier(0.33, 1, 0.68, 1) forwards,
+    characterBrightnessPulse 4s ease-in-out infinite;
+}
+
+.slot.reward-sam img.done {
+  width: calc(var(--petard-size) * 1.017 * 1.15 * 0.81);
+  height: calc(var(--petard-size) * 1.017 * 1.15 * 0.81);
+  margin-left: -8px;
+}
+
+.slot.reward-mia img.done {
+  width: calc(var(--petard-size) * 1.22);
+  height: calc(var(--petard-size) * 1.22);
+}
+
+.slot.reward-mia.show-special-reward .slot-inner {
+  translate: 0 -2px;
+}
+
+.slot.reward-mia.show-special-reward .slot-inner::before {
+  width: calc(var(--petard-size) * 1.3);
+  height: calc(var(--petard-size) * 1.3);
+}
+
+.slot.reward-hoppy img.done {
+  width: calc(var(--petard-size) * 0.82);
+  height: calc(var(--petard-size) * 0.82);
+  margin-left: -4px;
+}
+
+.slot.reward-hoppy.show-special-reward img.done {
+  bottom: calc(
+    var(--character-reward-bottom, var(--slot-sku-bottom, 0px)) +
+      var(--petard-size) * (1 - 0.82 * var(--character-face-mul, 1)) / 2
+  );
+}
+
+.slot.reward-hoppy.show-special-reward .slot-inner {
+  translate: 22px -5px;
+}
+
+.slot.reward-hoppy.show-special-reward .slot-inner::before {
+  width: calc(var(--petard-size) * 0.9);
+  height: calc(var(--petard-size) * 0.9);
+  margin-left: -16px;
+  bottom: 16%;
+}
+
+.slot.reward-oscar img.done {
+  width: calc(var(--petard-size) * 1.05);
+  height: calc(var(--petard-size) * 1.05);
+  margin-left: -6px;
+}
+
+#field .slot.reward-oscar.show-special-reward .slot-inner {
+  transform: rotate(var(--slot-tilt, 8deg)) translateY(-20px) !important;
+}
+
+#field .slot[data-index="3"]:not(.show-special-reward) .slot-inner {
+  transform: rotate(var(--slot-tilt, 8deg)) translateY(-8px) !important;
+}
+
+.slot.reward-oscar.show-special-reward .slot-inner::before {
+  width: calc(var(--petard-size) * 1.16);
+  height: calc(var(--petard-size) * 1.16);
+}
+
+.slot.reward-peggy img.done {
+  width: calc(var(--petard-size) * 1.116);
+  height: calc(var(--petard-size) * 1.116);
+  margin-left: 14px;
+}
+
+#field .slot.reward-peggy.show-special-reward .slot-inner {
+  transform: rotate(var(--slot-tilt, 8deg)) translateY(20px) !important;
+}
+
+.slot.reward-peggy.show-special-reward .slot-inner::before {
+  width: calc(var(--petard-size) * 1.224);
+  height: calc(var(--petard-size) * 1.224);
+  margin-left: 14px;
+}
+
+.slot.reward-carrie img.done {
+  width: calc(var(--petard-size) * 1.14);
+  height: calc(var(--petard-size) * 1.14);
+}
+
+.slot.reward-carrie.show-special-reward .slot-inner::before {
+  width: calc(var(--petard-size) * 1.24);
+  height: calc(var(--petard-size) * 1.24);
+}
+
+.slot.reward-mole img.done {
+  width: calc(var(--petard-size) * 1.05);
+  height: calc(var(--petard-size) * 1.05);
+}
+
+.slot.reward-mole.show-special-reward .slot-inner {
+  translate: 0 -14px;
+}
+
+.slot.reward-mole.show-special-reward .slot-inner::before {
+  width: calc(var(--petard-size) * 1.16);
+  height: calc(var(--petard-size) * 1.16);
+}
+
+.slot.reward-sanny img.done {
+  width: calc(var(--petard-size) * 1.1);
+  height: calc(var(--petard-size) * 1.1);
+  margin-left: -4px;
+}
+
+@keyframes specialRewardFlashIn {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) scale(1);
+  }
+}
+
+@keyframes characterBrightnessPulse {
+  0%,
+  100% {
+    filter: brightness(0.88);
+  }
+  50% {
+    filter: brightness(1.26);
+  }
+}
+
+.character-sparkle-ring {
+  position: absolute;
+  left: 50%;
+  bottom: 42%;
+  z-index: 3;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+
+.char-ambient-spark {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle at 35% 35%,
+    #fff 0%,
+    var(--tw-c, #ffe566) 55%,
+    var(--tw-c, #ffe566) 100%
+  );
+  box-shadow: 0 0 4px var(--tw-c, #ffe566);
+  transform: translate(calc(-50% + var(--orbit-x, 0px)), var(--orbit-y, 0px));
+  opacity: 0.32;
+  animation: charSparkTwinkle var(--tw-dur, 5s) ease-in-out infinite;
+  animation-delay: var(--tw-delay, 0s);
+}
+
+@keyframes charSparkTwinkle {
+  0%,
+  100% {
+    opacity: 0.22;
+    transform: translate(calc(-50% + var(--orbit-x, 0px)), var(--orbit-y, 0px))
+      scale(0.72);
+  }
+  50% {
+    opacity: 0.72;
+    transform: translate(calc(-50% + var(--orbit-x, 0px)), var(--orbit-y, 0px))
+      scale(0.95);
+  }
+}
+
