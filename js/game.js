@@ -12,24 +12,58 @@
 
   /** Petard file number (1.png … 8.png) → image after prize vanishes */
   const PETARD_SPECIAL_REWARD = {
-    1: "Assets/web-characters/Sam.png",
-    2: "Assets/web-characters/Mia.png",
-    3: "Assets/web-characters/Sanny.png",
-    4: "Assets/web-characters/Oscar.png",
-    5: "Assets/web-characters/Hoppy.png",
-    6: "Assets/web-characters/Peggy.png",
-    7: "Assets/web-characters/Carrie.png",
-    8: "Assets/web-characters/Mole.png",
+    1: "Assets/web-characters/Sam.webp",
+    2: "Assets/web-characters/Mia.webp",
+    3: "Assets/web-characters/Sanny.webp",
+    4: "Assets/web-characters/Oscar.webp",
+    5: "Assets/web-characters/Hoppy.webp",
+    6: "Assets/web-characters/Peggy.webp",
+    7: "Assets/web-characters/Carrie.webp",
+    8: "Assets/web-characters/Carrie.webp",
+    9: "Assets/web-characters/Rita.webp",
+    10: "Assets/web-characters/Mia.webp",
+    11: "Assets/web-characters/Mole.webp",
   };
 
-  function petardNumberFromImg(cubeImg) {
-    const file = (cubeImg.src.split("/").pop() || "").split("?")[0];
+  function petardNumberFromAssetPath(pathOrSrc) {
+    const src =
+      typeof pathOrSrc === "string"
+        ? pathOrSrc
+        : pathOrSrc?.src || "";
+    const file = (src.split("/").pop() || "").split("?")[0];
+    const cloud = file.match(/cloud(\d+)/i);
+    if (cloud) return parseInt(cloud[1], 10);
     const num = parseInt(file, 10);
     return Number.isFinite(num) ? num : null;
   }
 
+  function petardNumberFromImg(cubeImg) {
+    return petardNumberFromAssetPath(cubeImg?.src || "");
+  }
+
+  function isAlmazCloudAssetPath(path) {
+    const num = petardNumberFromAssetPath(path);
+    return num != null && FINAL_PRIZE_ALMAZ_CLOUDS.has(num);
+  }
+
+  /** One shuffled prize id per non-almaz cloud; almaz clouds get no SKU (no repeats). */
+  function buildPrizeOrderForField() {
+    const shuffled = shuffleArray(PRIZES.map((p) => p.id));
+    let assignIdx = 0;
+    return PETARDS.map((path) => {
+      if (isAlmazCloudAssetPath(path)) return null;
+      return shuffled[assignIdx++];
+    });
+  }
+
   /** Bump when character PNGs change (GitHub Pages / browser cache). */
-  const REWARD_ASSET_V = "web-chars5";
+  const REWARD_ASSET_V = "web-chars-rita";
+
+  /** Clouds with almaz → Final Prize panel (not SKU + character). */
+  const FINAL_PRIZE_ALMAZ_CLOUDS = new Set([1, 7, 10]);
+  const ALMAZ_FLY_SRC = "Assets/almaz_fly.png?v=1";
+  const ALMAZ_FLY_MS = 720;
+  const ALMAZ_FLY_SPIN_DEG = -5;
 
   function assetWithCacheBust(path) {
     if (!path) return path;
@@ -40,6 +74,89 @@
   function specialRewardForPetard(cubeImg) {
     const num = petardNumberFromImg(cubeImg);
     return num ? PETARD_SPECIAL_REWARD[num] || null : null;
+  }
+
+  function isFinalPrizeCloudSlot(slot) {
+    const num = petardNumberFromImg(slot?.cubeImg);
+    return num != null && FINAL_PRIZE_ALMAZ_CLOUDS.has(num);
+  }
+
+  function prizeRevealWidthOnStage(stage) {
+    if (!stage) return 120;
+    return Math.min(stage.offsetWidth * 0.11, 120);
+  }
+
+  function elementCenterSizeOnStage(stage, el) {
+    if (!stage || !el) return { x: 0, y: 0, w: 0, h: 0 };
+    const stageRect = stage.getBoundingClientRect();
+    if (stageRect.width <= 0 || stageRect.height <= 0) {
+      return { x: 0, y: 0, w: 0, h: 0 };
+    }
+    const r = el.getBoundingClientRect();
+    const scaleX = stage.offsetWidth / stageRect.width;
+    const scaleY = stage.offsetHeight / stageRect.height;
+    return {
+      x: (r.left + r.width / 2 - stageRect.left) * scaleX,
+      y: (r.top + r.height / 2 - stageRect.top) * scaleY,
+      w: r.width * scaleX,
+      h: r.height * scaleY,
+    };
+  }
+
+  function waitForTransition(el, fallbackMs) {
+    return new Promise((resolve) => {
+      let settled = false;
+      const finish = () => {
+        if (settled) return;
+        settled = true;
+        el.removeEventListener("transitionend", onEnd);
+        resolve();
+      };
+      const onEnd = (e) => {
+        if (e.target !== el) return;
+        finish();
+      };
+      el.addEventListener("transitionend", onEnd);
+      setTimeout(finish, fallbackMs);
+    });
+  }
+
+  async function playFinalPrizeAlmazFly(cloudCenter, opts = {}) {
+    const { bumpCounter = true } = opts;
+    const stage = document.getElementById("stage");
+    const gemIcon = document.querySelector(".final-prize-gem-icon");
+    if (!stage || !vfxLayer || !gemIcon) return;
+
+    const startW = prizeRevealWidthOnStage(stage);
+    const target = elementCenterSizeOnStage(stage, gemIcon);
+
+    const fly = document.createElement("img");
+    fly.className = "reveal-prize reveal-prize--cloud-center reveal-prize--almaz-fly";
+    fly.src = ALMAZ_FLY_SRC;
+    fly.alt = "";
+    fly.style.left = cloudCenter.x + "px";
+    fly.style.top = cloudCenter.y + "px";
+    fly.style.width = startW + "px";
+    fly.style.maxWidth = "none";
+    vfxLayer.appendChild(fly);
+
+    await wait(450);
+
+    fly.classList.add("is-flying");
+    fly.style.setProperty("--almaz-fly-ms", `${ALMAZ_FLY_MS}ms`);
+    fly.style.setProperty("--almaz-fly-spin", `${ALMAZ_FLY_SPIN_DEG}deg`);
+    void fly.offsetWidth;
+    const ease = "cubic-bezier(0.22, 0.61, 0.36, 1)";
+    fly.style.transition = `left ${ALMAZ_FLY_MS}ms ${ease}, top ${ALMAZ_FLY_MS}ms ${ease}, width ${ALMAZ_FLY_MS}ms ${ease}`;
+    fly.style.left = target.x + "px";
+    fly.style.top = target.y + "px";
+    fly.style.width = Math.max(target.w, 1) + "px";
+
+    await waitForTransition(fly, ALMAZ_FLY_MS + 120);
+    fly.remove();
+    if (bumpCounter) {
+      setPanelProgressCounter(panelProgressValue + 1);
+    }
   }
 
   /** Unique palette + burst style per petard 1–8 (matches 1.png … 8.png) */
@@ -114,47 +231,66 @@
     "reward-mole",
   ];
 
-  /** Petards 1–8.png left → right (slot index = file number − 1) */
+  /** Clouds 1–11 */
   const PETARDS = [
-    "Assets/1.png",
-    "Assets/2.png",
-    "Assets/3.png",
-    "Assets/4.png",
-    "Assets/5.png",
-    "Assets/6.png",
-    "Assets/7.png",
-    "Assets/8.png",
+    "Assets/cloud1.png?v=cloudv5",
+    "Assets/cloud2.png?v=cloudv6",
+    "Assets/cloud3.png?v=cloudv5",
+    "Assets/cloud4.png?v=cloudv6",
+    "Assets/cloud5.png?v=cloudv5",
+    "Assets/cloud6.png?v=cloudv5",
+    "Assets/cloud7.png?v=cloudv6",
+    "Assets/cloud8.png?v=cloudv6",
+    "Assets/cloud9.png?v=cloudv5",
+    "Assets/cloud10.png?v=cloudv5",
+    "Assets/cloud11.png?v=cloudv1",
   ];
 
-  /** 1→8 left to right, arc heights; x compressed toward center */
+  const PICK_COUNT = PETARDS.length;
+  const PANEL_PROGRESS_DENOM = 3;
+
+  /** Two loose rows in the sky, clear of the final-prize panel on the right */
   const SLOT_LAYOUT = [
-    { x: 25, y: 74, rotate: 12 },
-    { x: 33, y: 27, rotate: 11 },
-    { x: 40, y: 73, rotate: 10 },
-    { x: 49, y: 24, rotate: 8 },
-    { x: 53, y: 71, rotate: 5 },
-    { x: 62, y: 23, rotate: 8 },
-    { x: 69, y: 70, rotate: -11 },
-    { x: 77, y: 22, rotate: -14 },
+    { x: 42, y: -2, rotate: -4, offsetX: 10 },
+    { x: 44, y: 26, rotate: 3, offsetY: 19 },
+    { x: 54, y: 6, rotate: 2 },
+    { x: 61, y: 34, rotate: -3 },
+    { x: 70, y: 2, rotate: 4 },
+    { x: 26, y: 24, rotate: 3 },
+    { x: 30, y: 50, rotate: -4 },
+    { x: 51, y: 54, rotate: 2 },
+    { x: 67, y: 50, rotate: -2 },
+    { x: 74, y: 22, rotate: 5 },
+  /** Cloud 11 — above cloud 6 */
+    { x: 28, y: -6, rotate: 2 },
   ];
+
+  function slotTopCss(y, offsetY = 0) {
+    return offsetY ? `calc(${y}% + ${offsetY}px)` : `${y}%`;
+  }
+
+  function slotLeftCss(x, offsetX = 0) {
+    return offsetX ? `calc(${x}% - ${offsetX}px)` : `${x}%`;
+  }
 
   /**
-   * Bottom fan spawn positions (0 = left off-screen … 1 = right off-screen), petard 1→8.
-   * Matches sketch: #1 diagonal from left, #2–#3 clustered, #4–#5 center V, edges fan outward.
+   * Bottom fan spawn positions (0 = left off-screen … 1 = right off-screen).
    */
-  const PETARD_FAN_SPAWN_T = [0.22, 0.33, 0.41, 0.47, 0.5, 0.55, 0.61, 0.68];
+  const PETARD_FAN_SPAWN_T = [0.08, 0.18, 0.28, 0.38, 0.48, 0.58, 0.68, 0.76, 0.84, 0.92, 0.97];
   /** Petard file index (1-based) → fixed spawn X (% of stage); 5 = screen center */
   const PETARD_SPAWN_X_PCT = { 5: 50 };
 
   const field = document.getElementById("field");
   const prizePanelItems = document.getElementById("prizePanelItems");
+  const prizePanelProgressCounter = document.getElementById("prizePanelProgressCounter");
+  const finalPrizeProgressFill = document.getElementById("finalPrizeProgressFill");
   const energyValue = document.getElementById("energyValue");
   const handPointer = document.getElementById("handPointer");
   const vfxLayer = document.getElementById("vfxLayer");
   const gameCompleteOverlay = document.getElementById("gameCompleteOverlay");
   const gameCompleteRestart = document.getElementById("gameCompleteRestart");
 
-  let energy = 8;
+  let energy = PICK_COUNT;
   let slots = [];
   let canPick = false;
 
@@ -173,7 +309,10 @@
 
   const IDLE_WAIT_MS = 2000;
   const IDLE_ANIM_MS = 1000;
-  const GAME_COMPLETE_OVERLAY_DELAY_MS = 2000;
+  const GAME_COMPLETE_OVERLAY_DELAY_MS = 3000;
+  const FINAL_PRIZE_DONE_HOLD_MS = 2000;
+  const FINALE_PRIZE_POP_MS = 450;
+  const FINALE_PRIZE_EXTRA_HOLD_MS = 1000;
   const FW_SPEED_MUL = 1.55;
   const STAGE_BORDER_FIREWORK_INTERVAL_MS = Math.round(520 / FW_SPEED_MUL);
   const STAGE_BORDER_FIREWORK_SPREAD = 0.72;
@@ -240,28 +379,163 @@
     });
   }
 
+  function prizeAssetFileName(path) {
+    return (path || "").split("/").pop().split("?")[0];
+  }
+
+  function prizeForSlot(slot) {
+    if (!slot) return null;
+    if (slot.prize) return slot.prize;
+    const id =
+      slot.prizeId != null
+        ? Number(slot.prizeId)
+        : slot.el?.dataset?.prizeId != null
+          ? Number(slot.el.dataset.prizeId)
+          : NaN;
+    if (Number.isFinite(id)) {
+      const byId = PRIZES.find((p) => p.id === id);
+      if (byId) return byId;
+    }
+    const fromDataset = slot.el?.dataset?.prizeSrc;
+    if (fromDataset) {
+      const bySrc = PRIZES.find((p) => p.src === fromDataset);
+      if (bySrc) return bySrc;
+    }
+    const imgSrc = slot.prizeImg?.getAttribute("src") || "";
+    const file = prizeAssetFileName(imgSrc);
+    if (file) {
+      return (
+        PRIZES.find((p) => prizeAssetFileName(p.src) === file) ||
+        PRIZES.find((p) => p.src === `Assets/${file}`) ||
+        null
+      );
+    }
+    return null;
+  }
+
   function markPanelPrizeClaimed(prize) {
-    if (!prize) return;
-    const panelItem = prizePanelItems.querySelector(
-      `.panel-prize[data-prize-src="${prize.src}"]`
-    );
+    if (!prize || !prizePanelItems) return;
+    let panelItem =
+      prizePanelItems.querySelector(
+        `.panel-prize[data-prize-id="${String(prize.id)}"]`
+      ) ||
+      prizePanelItems.querySelector(
+        `.panel-prize[data-prize-src="${CSS.escape(prize.src)}"]`
+      );
+    if (!panelItem) {
+      panelItem = Array.from(prizePanelItems.querySelectorAll(".panel-prize")).find(
+        (el) => Number(el.dataset.prizeId) === Number(prize.id)
+      );
+    }
     if (panelItem && !panelItem.classList.contains("claimed")) {
       panelItem.classList.add("claimed");
     }
+  }
+
+  function markSlotPrizeOnPanel(slot) {
+    markPanelPrizeClaimed(prizeForSlot(slot));
+    if (allPanelPrizesClaimed()) {
+      void tryPanelFullAlmazFinale();
+    }
+  }
+
+  function allPanelPrizesClaimed() {
+    if (!prizePanelItems) return false;
+    return PRIZES.every((p) => {
+      const el =
+        prizePanelItems.querySelector(
+          `.panel-prize[data-prize-id="${String(p.id)}"]`
+        ) ||
+        Array.from(prizePanelItems.querySelectorAll(".panel-prize")).find(
+          (node) => Number(node.dataset.prizeId) === Number(p.id)
+        );
+      return el && el.classList.contains("claimed");
+    });
+  }
+
+  function hideUnopenedAlmazCloud(slot) {
+    slot.opened = true;
+    slot.el.classList.add("disabled", "almaz-cloud-vanish");
+    slot.el.classList.remove("pickable", "opening");
+    if (slot.cubeImg) {
+      slot.cubeImg.style.opacity = "0";
+      slot.cubeImg.style.visibility = "hidden";
+    }
+    if (slot.cloudHit) {
+      slot.cloudHit.style.visibility = "hidden";
+      slot.cloudHit.style.pointerEvents = "none";
+    }
+  }
+
+  /** Side panel 8/8 — hide unopened almaz clouds; remaining gems fly to Final Prize. */
+  async function tryPanelFullAlmazFinale() {
+    if (almazPanelFinaleStarted || almazGrandFinaleStarted) return;
+    if (!allPanelPrizesClaimed()) return;
+    almazPanelFinaleStarted = true;
+
+    disablePicking();
+    hideHand();
+    clearIdleHintTimers();
+
+    const unopenedAlmaz = slots.filter((s) => isFinalPrizeCloudSlot(s) && !s.opened);
+    const remaining = Math.max(0, PANEL_PROGRESS_DENOM - panelProgressValue);
+    const toFly = unopenedAlmaz.slice(0, remaining);
+
+    const centers = toFly.map((slot) => {
+      const center = slotPetardCenterOnStage(slot);
+      hideUnopenedAlmazCloud(slot);
+      finalizeSlotVisualClosed(slot);
+      return center;
+    });
+
+    if (centers.length) {
+      await Promise.all(
+        centers.map((center) =>
+          playFinalPrizeAlmazFly(center, { bumpCounter: false })
+        )
+      );
+      setPanelProgressCounter(
+        Math.min(PANEL_PROGRESS_DENOM, panelProgressValue + centers.length)
+      );
+    }
+
+    updatePickableSlots();
+    scheduleEndGamePresentation();
+  }
+
+  function markOpenedSlotPrizesOnPanel() {
+    slots.forEach((slot) => {
+      if (!slot.opened) return;
+      markSlotPrizeOnPanel(slot);
+    });
+  }
+
+  function allSlotsOpened() {
+    return slots.length > 0 && slots.every((s) => s.opened);
   }
 
   function buildField(prizeOrder) {
     field.innerHTML = "";
     slots = prizeOrder.map((prizeId, index) => {
       const pos = SLOT_LAYOUT[index];
-      const prize = PRIZES.find((p) => p.id === prizeId);
+      const isAlmazSlot = isAlmazCloudAssetPath(PETARDS[index]);
+      const hasPrizeId = prizeId != null && prizeId !== "";
+      const prizeIdNum = hasPrizeId ? Number(prizeId) : null;
+      const prize =
+        prizeIdNum != null && Number.isFinite(prizeIdNum)
+          ? PRIZES.find((p) => p.id === prizeIdNum)
+          : null;
+      if (!prize && !isAlmazSlot) return null;
 
       const slot = document.createElement("div");
       slot.className = "slot intro-hidden";
-      slot.style.left = pos.x + "%";
-      slot.style.top = pos.y + "%";
+      slot.style.left = slotLeftCss(pos.x, pos.offsetX);
+      slot.style.top = slotTopCss(pos.y, pos.offsetY);
       slot.dataset.index = String(index);
-      slot.dataset.prizeId = String(prizeId);
+      if (prize) {
+        slot.dataset.prizeId = String(prize.id);
+        slot.dataset.prizeSrc = prize.src;
+      }
 
       const inner = document.createElement("div");
       inner.className = "slot-inner";
@@ -269,7 +543,11 @@
 
       const prizeImg = document.createElement("img");
       prizeImg.className = "prize";
-      prizeImg.src = prize.src;
+      if (prize) {
+        prizeImg.src = prize.src;
+      } else {
+        prizeImg.removeAttribute("src");
+      }
       prizeImg.alt = "";
 
       const cubeImg = document.createElement("img");
@@ -280,36 +558,53 @@
       cubeImg.style.setProperty("--float-delay", (-Math.random() * 3.5).toFixed(2) + "s");
       cubeImg.style.setProperty(
         "--float-dur",
-        (2.35 + Math.random() * 1.35).toFixed(2) + "s"
+        (4.2 + Math.random() * 2.4).toFixed(2) + "s"
       );
+
+      const cloudHit = document.createElement("button");
+      cloudHit.type = "button";
+      cloudHit.className = "cloud-hit";
+      cloudHit.setAttribute("aria-label", "Pick cloud");
+      cloudHit.style.setProperty("--float-delay", cubeImg.style.getPropertyValue("--float-delay"));
+      cloudHit.style.setProperty("--float-dur", cubeImg.style.getPropertyValue("--float-dur"));
 
       inner.appendChild(prizeImg);
       inner.appendChild(cubeImg);
+      inner.appendChild(cloudHit);
       slot.appendChild(inner);
       field.appendChild(slot);
 
-      cubeImg.addEventListener("click", () => onCubeClick(index));
+      cloudHit.addEventListener("click", (ev) => {
+        ev.preventDefault();
+        const resolved = resolvePickableSlotAt(ev.clientX, ev.clientY);
+        onCubeClick(resolved !== null ? resolved : index);
+      });
 
       return {
+        index,
         el: slot,
         inner,
         prizeImg,
         cubeImg,
+        cloudHit,
         doneImg: null,
-        prizeId,
+        prize: prize || null,
+        prizeId: prize ? prize.id : null,
         layoutX: pos.x,
+        layoutOffsetX: pos.offsetX || 0,
         layoutY: pos.y,
+        layoutOffsetY: pos.offsetY || 0,
         layoutRotate: pos.rotate,
         opened: false,
         opening: false,
         index,
       };
-    });
+    }).filter(Boolean);
   }
 
   function applySlotLayout(slot) {
-    slot.el.style.left = slot.layoutX + "%";
-    slot.el.style.top = slot.layoutY + "%";
+    slot.el.style.left = slotLeftCss(slot.layoutX, slot.layoutOffsetX);
+    slot.el.style.top = slotTopCss(slot.layoutY, slot.layoutOffsetY);
     slot.inner.style.setProperty("--slot-tilt", `${slot.layoutRotate}deg`);
     slot.inner.style.transform = `rotate(${slot.layoutRotate}deg)`;
   }
@@ -318,6 +613,27 @@
     energy = n;
     energyValue.textContent = String(n);
   }
+
+  /** Panel progress over art (0…PANEL_PROGRESS_DENOM). Rules TBD. */
+  let panelProgressValue = 0;
+  let almazGrandFinaleStarted = false;
+  let almazPanelFinaleStarted = false;
+  let finalPrizeCompleteSequenceStarted = false;
+
+  function setPanelProgressCounter(value) {
+    panelProgressValue = Math.max(0, Math.min(PANEL_PROGRESS_DENOM, value | 0));
+    if (prizePanelProgressCounter) {
+      prizePanelProgressCounter.textContent = `${panelProgressValue}/${PANEL_PROGRESS_DENOM}`;
+    }
+    const progressRatio =
+      PANEL_PROGRESS_DENOM > 0 ? panelProgressValue / PANEL_PROGRESS_DENOM : 0;
+    if (finalPrizeProgressFill) {
+      finalPrizeProgressFill.style.setProperty("--progress-ratio", String(progressRatio));
+    }
+  }
+
+  window.setPanelProgressCounter = setPanelProgressCounter;
+  setPanelProgressCounter(0);
 
   function showGameCompleteOverlay() {
     if (!gameCompleteOverlay) return;
@@ -393,6 +709,46 @@
     }, GAME_COMPLETE_OVERLAY_DELAY_MS);
   }
 
+  function revealFinalPrizeDoneMarks() {
+    const wrap = document.getElementById("finalPrizeRewardsDone");
+    if (!wrap) return;
+    wrap.classList.add("is-visible");
+    wrap.setAttribute("aria-hidden", "false");
+  }
+
+  function hideFinalPrizeDoneMarks() {
+    const wrap = document.getElementById("finalPrizeRewardsDone");
+    if (!wrap) return;
+    wrap.classList.remove("is-visible");
+    wrap.setAttribute("aria-hidden", "true");
+  }
+
+  /** 3/3 almaz: Done on Final Prize rewards → 2s → fireworks 3s → recompletion overlay. */
+  async function runFinalPrizeAlmazCompleteSequence() {
+    if (finalPrizeCompleteSequenceStarted) return;
+    if (panelProgressValue < PANEL_PROGRESS_DENOM) return;
+    finalPrizeCompleteSequenceStarted = true;
+
+    clearGameCompleteOverlayTimer();
+    clearStageBorderFireworks();
+
+    revealFinalPrizeDoneMarks();
+    await wait(FINAL_PRIZE_DONE_HOLD_MS);
+
+    startStageBorderFireworks(GAME_COMPLETE_OVERLAY_DELAY_MS);
+    await wait(GAME_COMPLETE_OVERLAY_DELAY_MS);
+
+    showGameCompleteOverlay();
+  }
+
+  function scheduleEndGamePresentation() {
+    if (panelProgressValue >= PANEL_PROGRESS_DENOM) {
+      void runFinalPrizeAlmazCompleteSequence();
+    } else {
+      scheduleGameCompleteOverlay();
+    }
+  }
+
   function hideGameCompleteOverlay() {
     if (!gameCompleteOverlay) return;
     clearGameCompleteOverlayTimer();
@@ -410,7 +766,11 @@
     hideHand();
     resetFireworkCanvas();
     if (vfxLayer) vfxLayer.innerHTML = "";
-    setEnergy(8);
+    almazGrandFinaleStarted = false;
+    almazPanelFinaleStarted = false;
+    finalPrizeCompleteSequenceStarted = false;
+    hideFinalPrizeDoneMarks();
+    setEnergy(PICK_COUNT);
     canPick = false;
     showHandOnFirstPick = true;
     await runIntro();
@@ -504,8 +864,8 @@
   function snapPetardsToLayout(options = {}) {
     const { settling = false, clearSettling = false } = options;
     slots.forEach((s) => {
-      s.el.style.left = s.layoutX + "%";
-      s.el.style.top = s.layoutY + "%";
+      s.el.style.left = slotLeftCss(s.layoutX, s.layoutOffsetX);
+      s.el.style.top = slotTopCss(s.layoutY, s.layoutOffsetY);
       if (settling) s.el.classList.add("petard-settling");
       if (clearSettling) s.el.classList.remove("petard-settling");
       s.el.classList.remove("petard-fly-in", "intro-hidden", "opening");
@@ -535,68 +895,47 @@
     beginPetardIdleMotion();
   }
 
-  function flyPetardsFromPanel() {
-    const spawns = getPetardSpawnPercents(slots.length);
-
-    slots.forEach((s, i) => {
-      const spawn = spawns[i] || spawns[0];
+  function showCloudsInPlace() {
+    slots.forEach((s) => {
       s.prizeImg.style.opacity = "0";
       s.prizeImg.style.visibility = "hidden";
       s.cubeImg.style.opacity = "1";
       s.cubeImg.style.visibility = "visible";
       s.inner.style.transform = `rotate(${s.layoutRotate}deg)`;
-      s.el.style.left = spawn.x + "%";
-      s.el.style.top = spawn.y + "%";
-      s.el.classList.remove("intro-hidden");
-      s.el.classList.add("petard-fly-in");
+      s.el.style.left = slotLeftCss(s.layoutX, s.layoutOffsetX);
+      s.el.style.top = slotTopCss(s.layoutY, s.layoutOffsetY);
+      s.el.classList.remove("intro-hidden", "petard-fly-in", "cloud-fade-in");
+    });
+    finalizePetardLanding();
+  }
+
+  function fadeCloudsInPlace() {
+    const FADE_MS = 950;
+    const STAGGER_MS = 50;
+
+    slots.forEach((s, i) => {
+      s.prizeImg.style.opacity = "0";
+      s.prizeImg.style.visibility = "hidden";
+      s.cubeImg.style.opacity = "1";
+      s.cubeImg.style.visibility = "visible";
+      s.inner.style.transform = `rotate(${s.layoutRotate}deg)`;
+      s.el.style.left = slotLeftCss(s.layoutX, s.layoutOffsetX);
+      s.el.style.top = slotTopCss(s.layoutY, s.layoutOffsetY);
+      s.el.classList.remove("intro-hidden", "petard-fly-in");
+      s.el.classList.add("cloud-fade-in");
+      s.el.style.setProperty("--cloud-fade-delay", `${i * STAGGER_MS}ms`);
     });
 
-    const tracks = slots.map((s, i) => {
-      const spawn = spawns[i] || spawns[0];
-      return {
-        slot: s,
-        S: { x: spawn.x, y: spawn.y },
-        T: { x: s.layoutX, y: s.layoutY },
-      };
-    });
+    const totalMs = FADE_MS + Math.max(0, slots.length - 1) * STAGGER_MS + 60;
 
     return new Promise((resolve) => {
-      const t0 = performance.now();
-      let finished = false;
-      let rafId = null;
-
-      function completeLanding() {
-        if (finished) return;
-        finished = true;
-        if (rafId !== null) {
-          cancelAnimationFrame(rafId);
-          rafId = null;
-        }
-        snapPetardsToLayout({ settling: true });
-        resolve();
-      }
-
-      function frame(now) {
-        if (finished) return;
-
-        const elapsed = now - t0;
-        const raw = Math.min(1, elapsed / PETARD_FLY_IN_MS);
-        const u = easeOutCubic(raw);
-
-        tracks.forEach(({ slot, S, T }) => {
-          slot.el.style.left = S.x + (T.x - S.x) * u + "%";
-          slot.el.style.top = S.y + (T.y - S.y) * u + "%";
+      setTimeout(() => {
+        slots.forEach((s) => {
+          s.el.classList.remove("cloud-fade-in");
         });
-
-        if (raw < 1) {
-          rafId = requestAnimationFrame(frame);
-        } else {
-          completeLanding();
-        }
-      }
-
-      rafId = requestAnimationFrame(frame);
-      setTimeout(completeLanding, PETARD_FLY_IN_MS + 200);
+        finalizePetardLanding();
+        resolve();
+      }, totalMs);
     });
   }
 
@@ -1071,7 +1410,14 @@
     }
   }
 
+  function playCloudPickBurst(slot) {
+    if (!vfxLayer || !slot) return;
+    const c = slotPetardCenterOnStage(slot);
+    playOpenMagic(c.x, c.y);
+  }
+
   function playOpenMagic(x, y) {
+    if (!vfxLayer) return;
     const burst = document.createElement("div");
     burst.className = "vfx-burst";
     burst.style.left = x + "px";
@@ -1096,10 +1442,10 @@
     burst.appendChild(raysWrap);
     vfxLayer.appendChild(burst);
 
-    const colors = ["#fff", "#ffe566", "#ffb347", "#a8e6ff", "#ff9ef1"];
-    spawnSparkles(x, y, 44, 115, 750, colors);
-    spawnSparkles(x, y, 32, 70, 550, colors);
-    spawnSparkles(x, y, 20, 40, 450, colors);
+    const colors = ["#ffffff", "#fffffe", "#f8f9ff", "#fffef5"];
+    spawnSparkles(x, y, 40, 82, 720, colors);
+    spawnSparkles(x, y, 28, 52, 540, colors);
+    spawnSparkles(x, y, 16, 34, 420, colors);
 
     setTimeout(() => burst.remove(), 1150);
   }
@@ -1215,6 +1561,37 @@
     );
   }
 
+  /** Topmost sky row wins when cloud hit areas overlap (e.g. cloud 5 vs cloud 10). */
+  function resolvePickableSlotAt(clientX, clientY) {
+    for (const el of document.elementsFromPoint(clientX, clientY)) {
+      if (!el.classList?.contains("cloud-hit")) continue;
+      const slotEl = el.closest(".slot");
+      if (!slotEl?.dataset.index) continue;
+      const idx = parseInt(slotEl.dataset.index, 10);
+      const slot = slots[idx];
+      if (!slot || slot.opened || slot.opening) continue;
+      if (!slotEl.classList.contains("pickable")) continue;
+      if (isHandHintActive() && idx !== handTargetSlot) continue;
+      return idx;
+    }
+    return null;
+  }
+
+  function applyPickableStackOrder() {
+    const pickable = slots.filter(
+      (s) =>
+        !s.opened && !s.opening && canPick && s.el.classList.contains("pickable")
+    );
+    pickable.sort((a, b) => a.layoutY - b.layoutY);
+    pickable.forEach((s, i) => {
+      s.el.style.zIndex = String(18 + (pickable.length - 1 - i));
+    });
+    slots.forEach((s) => {
+      if (pickable.includes(s)) return;
+      s.el.style.zIndex = s.opened ? "11" : "12";
+    });
+  }
+
   function updatePickableSlots() {
     slots.forEach((s) => {
       s.el.classList.remove("waiting-first-pick");
@@ -1242,6 +1619,7 @@
       s.el.classList.add("pickable");
       s.el.classList.remove("disabled");
     });
+    applyPickableStackOrder();
   }
 
   function scheduleIdleHint() {
@@ -1303,15 +1681,85 @@
     });
   }
 
+  function finalizeSlotVisualClosed(slot) {
+    slot.opening = false;
+    slot.el.classList.remove("pickable", "opening");
+    slot.el.classList.add("disabled");
+    if (slot.cubeImg) {
+      slot.cubeImg.style.opacity = "0";
+      slot.cubeImg.style.visibility = "hidden";
+    }
+  }
+
+  /** After 3/3 almaz — all remaining clouds reveal prize + character; game-complete fireworks. */
+  async function triggerAlmazGrandFinale() {
+    if (almazGrandFinaleStarted) return;
+    if (panelProgressValue < PANEL_PROGRESS_DENOM) return;
+    almazGrandFinaleStarted = true;
+
+    disablePicking();
+    hideHand();
+    clearIdleHintTimers();
+    clearGameCompleteOverlayTimer();
+
+    const pending = slots.filter((s) => !s.opened && !s.opening);
+    if (!pending.length) {
+      scheduleEndGamePresentation();
+      return;
+    }
+
+    pending.forEach((slot) => {
+      slot.opening = true;
+      slot.el.classList.add("opening");
+      playCloudPickBurst(slot);
+    });
+
+    const revealBatch = pending.map((slot) => {
+      const cloudCenter = slotPetardCenterOnStage(slot);
+      const prize = prizeForSlot(slot);
+      const fly = document.createElement("img");
+      fly.className = "reveal-prize reveal-prize--cloud-center";
+      fly.src = prize?.src || slot.prizeImg?.getAttribute("src") || "";
+      fly.alt = "";
+      fly.style.left = cloudCenter.x + "px";
+      fly.style.top = cloudCenter.y + "px";
+      if (vfxLayer) vfxLayer.appendChild(fly);
+      return { slot, fly, prize };
+    });
+
+    startStageBorderFireworks(
+      FINALE_PRIZE_POP_MS + FINALE_PRIZE_EXTRA_HOLD_MS + 1200
+    );
+
+    await wait(FINALE_PRIZE_POP_MS + FINALE_PRIZE_EXTRA_HOLD_MS);
+
+    revealBatch.forEach(({ fly }) => fly.remove());
+
+    await Promise.all(
+      revealBatch.map(async ({ slot, prize }) => {
+        const specialReward = specialRewardForPetard(slot.cubeImg);
+        await revealSlotCharacter(slot, specialReward);
+        slot.opened = true;
+        markSlotPrizeOnPanel(slot);
+        finalizeSlotVisualClosed(slot);
+      })
+    );
+
+    markOpenedSlotPrizesOnPanel();
+    updatePickableSlots();
+    scheduleEndGamePresentation();
+  }
+
   const REWARD_CLASS_BY_FILE = {
-    "Sam.png": "reward-sam",
-    "Mia.png": "reward-mia",
-    "Hoppy.png": "reward-hoppy",
-    "Oscar.png": "reward-oscar",
-    "Peggy.png": "reward-peggy",
-    "Carrie.png": "reward-carrie",
-    "Mole.png": "reward-mole",
-    "Sanny.png": "reward-sanny",
+    "Sam.webp": "reward-sam",
+    "Mia.webp": "reward-mia",
+    "Hoppy.webp": "reward-hoppy",
+    "Oscar.webp": "reward-oscar",
+    "Peggy.webp": "reward-peggy",
+    "Carrie.webp": "reward-carrie",
+    "Mole.webp": "reward-mole",
+    "Sanny.webp": "reward-sanny",
+    "Rita.webp": "reward-rita",
   };
 
   async function revealSlotCharacter(slot, specialReward) {
@@ -1329,16 +1777,35 @@
     slot.el.classList.add("show-special-reward");
     if (rewardClass) slot.el.classList.add(rewardClass);
 
+    img.style.setProperty("--float-delay", (-Math.random() * 3.5).toFixed(2) + "s");
+    img.style.setProperty(
+      "--float-dur",
+      (4.2 + Math.random() * 2.4).toFixed(2) + "s"
+    );
+
     try {
       if (img.decode) await img.decode();
     } catch (_) {
       /* decode optional */
     }
-
-    attachCharacterAmbientSparkles(slot);
   }
 
   function afterPickResolved() {
+    if (allSlotsOpened() && !anySlotOpening()) {
+      disablePicking();
+      hideHand();
+      clearIdleHintTimers();
+      markOpenedSlotPrizesOnPanel();
+      if (!almazGrandFinaleStarted && !finalPrizeCompleteSequenceStarted) {
+        scheduleEndGamePresentation();
+      }
+      return;
+    }
+
+    if (almazGrandFinaleStarted || finalPrizeCompleteSequenceStarted) {
+      return;
+    }
+
     if (energy > 0 && slots.some((s) => !s.opened)) {
       updatePickableSlots();
       resetIdleHintSchedule();
@@ -1347,7 +1814,7 @@
     if (energy === 0 && !anySlotOpening()) {
       disablePicking();
       hideHand();
-      scheduleGameCompleteOverlay();
+      scheduleEndGamePresentation();
       return;
     }
     updatePickableSlots();
@@ -1367,48 +1834,52 @@
     setEnergy(energy - 1);
     updatePickableSlots();
 
-    const center = slotCenterOnStage(slot.el);
-    const skuPoint = slotSkuRevealPoint(slot.el);
-    const prize = PRIZES.find((p) => p.id === slot.prizeId);
+    const cloudCenter = slotPetardCenterOnStage(slot);
+    const prize = prizeForSlot(slot);
 
     slot.el.classList.add("opening");
-    slot.cubeImg.style.opacity = "0";
-    slot.cubeImg.style.visibility = "hidden";
-    playPetardFirework(center.x, center.y, slot.cubeImg);
+    playCloudPickBurst(slot);
 
     try {
-      await wait(720);
+      await wait(780);
 
-      const fly = document.createElement("img");
-      fly.className = "reveal-prize";
-      fly.src = prize.src;
-      fly.alt = "";
-      fly.style.left = skuPoint.x + "px";
-      fly.style.top = skuPoint.y + "px";
-      vfxLayer.appendChild(fly);
+      if (isFinalPrizeCloudSlot(slot)) {
+        await playFinalPrizeAlmazFly(cloudCenter);
+        slot.opened = true;
+        if (panelProgressValue >= PANEL_PROGRESS_DENOM) {
+          await triggerAlmazGrandFinale();
+        }
+      } else {
+        const fly = document.createElement("img");
+        fly.className = "reveal-prize reveal-prize--cloud-center";
+        fly.src = prize?.src || "";
+        fly.alt = "";
+        fly.style.left = cloudCenter.x + "px";
+        fly.style.top = cloudCenter.y + "px";
+        vfxLayer.appendChild(fly);
 
-      await wait(420);
+        await wait(420);
 
-      playSlotFlash(center.x, center.y);
-      fly.remove();
+        fly.remove();
 
-      await wait(140);
+        await wait(180);
 
-      const specialReward = specialRewardForPetard(slot.cubeImg);
-      await revealSlotCharacter(slot, specialReward);
+        const specialReward = specialRewardForPetard(slot.cubeImg);
+        await revealSlotCharacter(slot, specialReward);
 
-      markPanelPrizeClaimed(prize);
-
-      slot.opened = true;
+        slot.opened = true;
+      }
     } finally {
-      slot.opening = false;
-      slot.el.classList.remove("pickable", "opening");
-      slot.el.classList.add("disabled");
+      finalizeSlotVisualClosed(slot);
+      if (slot.opened) {
+        markSlotPrizeOnPanel(slot);
+      }
       afterPickResolved();
     }
   }
 
   async function finishIntroUi() {
+    setPanelProgressCounter(0);
     showPrizeAndInfoPanels();
     showIntroStep("header");
     await waitForStageLayout();
@@ -1418,17 +1889,13 @@
   }
 
   async function runIntro() {
+    setPanelProgressCounter(0);
     buildPanel();
-    const prizeOrder = shuffleArray(PRIZES.map((p) => p.id));
-    buildField(prizeOrder);
+    buildField(buildPrizeOrderForField());
 
     await waitForStageLayout();
 
-    try {
-      await flyPetardsFromPanel();
-    } catch (err) {
-      console.error("runIntro flyPetards failed", err);
-    }
+    showCloudsInPlace();
 
     await finishIntroUi();
   }

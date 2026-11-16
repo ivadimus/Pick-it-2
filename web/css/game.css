@@ -94,7 +94,7 @@ body {
   width: 100%;
   height: 100%;
   border-radius: 48px;
-  background: #7ec8f0 url("../Assets/bg.jpg?v=meadow3") center bottom / cover no-repeat;
+  background: #7ec8f0 url("../Assets/bg.webp?v=bg2500v3") 32% 78% / 100% auto no-repeat;
   overflow: hidden;
   display: flex;
   flex-direction: row;
@@ -193,7 +193,7 @@ body {
   padding: 28px;
   text-align: center;
   color: #fff;
-  background: #7ec8f0 url("../Assets/bg.jpg?v=meadow3") center bottom / cover no-repeat;
+  background: #7ec8f0 url("../Assets/bg.webp?v=bg2500v3") 32% 78% / 100% auto no-repeat;
   pointer-events: auto;
 }
 
@@ -520,7 +520,7 @@ html.is-touch.game-landscape .stage {
   --close-nudge-x: 32px;
   --header-est-h: min(12.5vw, 54px);
   --prize-panel-items-mul: 0.85;
-  --prize-panel-top: calc(0.8% + 10px + var(--header-est-h) + 5px);
+  --prize-panel-top: calc(0.8% + 10px + var(--header-est-h) - 3px);
   --field-top: calc(var(--prize-panel-top) + var(--prize-panel-h) + 8px);
   --prize-panel-gap: 1px;
   --prize-panel-item-overlap: 2px;
@@ -570,6 +570,25 @@ html.is-touch.game-landscape .btn-close {
     )
   );
   top: max(var(--ui-top), env(safe-area-inset-top, 8px));
+}
+
+html.is-touch.game-landscape .final-prize-wrap {
+  top: calc(
+    max(var(--ui-top), env(safe-area-inset-top, 8px)) + var(--final-prize-shift-y, 58px)
+  );
+  right: max(
+    2px,
+    calc(
+      var(--edge-x) - var(--close-nudge-x, 0px) +
+        env(safe-area-inset-right, 0px) + var(--final-prize-shift-x, 4px)
+    )
+  );
+  height: calc(
+    (
+        100% - max(var(--ui-top), env(safe-area-inset-top, 8px)) -
+          var(--final-prize-shift-y, 58px) - 6px
+      ) * var(--final-prize-scale, 0.924)
+  );
 }
 
 html.is-touch.game-landscape .btn-info,
@@ -757,47 +776,48 @@ html.is-touch.game-landscape #field .slot[data-index="5"].show-special-reward im
 html.is-touch.game-landscape .slot.reward-mia img.done {
   width: calc(var(--petard-size) * 1.22 * var(--character-face-mul));
   height: calc(var(--petard-size) * 1.22 * var(--character-face-mul));
+  margin-left: -10px;
 }
 
 html.is-touch.game-landscape .slot.reward-mia.show-special-reward .slot-inner {
-  translate: 0 -2px;
+  translate: -8px 5px;
 }
 
 html.is-touch.game-landscape .slot.reward-sanny img.done {
-  width: calc(var(--petard-size) * 1.1 * var(--character-face-mul));
-  height: calc(var(--petard-size) * 1.1 * var(--character-face-mul));
-  margin-left: -4px;
+  width: calc(var(--petard-size) * 0.95 * var(--character-face-mul));
+  height: calc(var(--petard-size) * 0.95 * var(--character-face-mul));
+  margin-left: -12px;
 }
 
 html.is-touch.game-landscape .slot.reward-hoppy img.done {
-  width: calc(var(--petard-size) * 0.82 * var(--character-face-mul));
-  height: calc(var(--petard-size) * 0.82 * var(--character-face-mul));
-  margin-left: 10px;
+  width: calc(var(--petard-size) * 0.78 * var(--character-face-mul));
+  height: calc(var(--petard-size) * 0.78 * var(--character-face-mul));
+  margin-left: 0px;
 }
 
 html.is-touch.game-landscape .slot.reward-hoppy.show-special-reward img.done {
   bottom: calc(
-    var(--character-reward-bottom, 10px) + var(--petard-size) * (1 - 0.82 * var(--character-face-mul, 1)) / 2
+    var(--character-reward-bottom, 10px) + var(--petard-size) * (1 - 0.78 * var(--character-face-mul, 1)) / 2 + 8px
   );
 }
 
 html.is-touch.game-landscape .slot.reward-hoppy.show-special-reward .slot-inner {
-  translate: 24px -7px;
+  translate: 12px 2px;
 }
 
 html.is-touch.game-landscape .slot.reward-oscar img.done {
-  width: calc(var(--petard-size) * 1.05 * var(--character-face-mul));
-  height: calc(var(--petard-size) * 1.05 * var(--character-face-mul));
+  width: calc(var(--petard-size) * 0.893 * var(--character-face-mul));
+  height: calc(var(--petard-size) * 0.893 * var(--character-face-mul));
   margin-left: -6px;
 }
 
 html.is-touch.game-landscape #field .slot.reward-oscar.show-special-reward .slot-inner {
-  transform: rotate(var(--slot-tilt, 8deg)) translateY(-22px) !important;
+  transform: rotate(var(--slot-tilt, 8deg)) translateY(6px) !important;
 }
 
 html.is-touch.game-landscape .slot.reward-peggy img.done {
-  width: calc(var(--petard-size) * 1.116 * var(--character-face-mul));
-  height: calc(var(--petard-size) * 1.116 * var(--character-face-mul));
+  width: calc(var(--petard-size) * 0.95 * var(--character-face-mul));
+  height: calc(var(--petard-size) * 0.95 * var(--character-face-mul));
 }
 
 html.is-touch.game-landscape #field .slot.reward-peggy.show-special-reward .slot-inner {
@@ -805,17 +825,19 @@ html.is-touch.game-landscape #field .slot.reward-peggy.show-special-reward .slot
 }
 
 html.is-touch.game-landscape .slot.reward-carrie img.done {
-  width: calc(var(--petard-size) * 1.14 * var(--character-face-mul));
-  height: calc(var(--petard-size) * 1.14 * var(--character-face-mul));
+  width: calc(var(--petard-size) * 0.98 * var(--character-face-mul));
+  height: calc(var(--petard-size) * 0.98 * var(--character-face-mul));
+  margin-left: -4px;
 }
 
 html.is-touch.game-landscape .slot.reward-mole img.done {
-  width: calc(var(--petard-size) * 1.05 * var(--character-face-mul));
-  height: calc(var(--petard-size) * 1.05 * var(--character-face-mul));
+  width: calc(var(--petard-size) * 0.9 * var(--character-face-mul));
+  height: calc(var(--petard-size) * 0.9 * var(--character-face-mul));
+  margin-left: 18px;
 }
 
 html.is-touch.game-landscape .slot.reward-mole.show-special-reward .slot-inner {
-  translate: 0 -16px;
+  translate: 14px 10px;
 }
 
 html.is-touch.game-landscape .info-swing img {
@@ -980,7 +1002,7 @@ html.is-touch.game-landscape .info-swing img {
   --top-left-nudge-x: -16px;
   --close-nudge-x: 14px;
   --header-est-h: min(14cqw, 62px);
-  --prize-panel-top: calc(0.8% + 10px + var(--header-est-h) + 28px);
+  --prize-panel-top: calc(0.8% + 10px + var(--header-est-h) + 16px);
   --field-top: calc(var(--prize-panel-top) + var(--prize-panel-h) + 10px);
   --header-w: 42.32%;
   --prize-panel-rise-offset: -min(88px, 16vh);
@@ -1006,6 +1028,7 @@ html.is-touch.game-landscape .info-swing img {
   --lower-row-prize-lift: 14px;
   --slot-sku-bottom: 0px;
   --character-reward-bottom: var(--slot-sku-bottom, 0px);
+  --cloud-face-bottom-mul: 0.06;
   --panel-prize-size-mul: 1.1;
 
   position: relative;
@@ -1085,16 +1108,45 @@ html.is-touch.game-landscape .info-swing img {
 }
 
 .final-prize-wrap {
+  --final-prize-scale: 0.924;
+  --final-prize-shift-x: 4px;
+  --final-prize-shift-y: 58px;
+  --final-prize-gem-x: 27.08%;
+  --final-prize-gem-y: 14.0%;
+  --final-prize-gem-art-w: 18.75%;
+  --final-prize-gem-art-h: 7.8125%;
+  --final-prize-gem-scale: 1;
+  --final-prize-gem-w: calc(var(--final-prize-gem-art-w) * var(--final-prize-gem-scale));
+  --final-prize-gem-h: calc(var(--final-prize-gem-art-h) * var(--final-prize-gem-scale));
+  --final-prize-progress-track-left: 21.5%;
+  --final-prize-progress-track-top: 14.3%;
+  --final-prize-progress-track-width: 57.2%;
+  --final-prize-progress-track-height: 5.2%;
+  --final-prize-progress-x: 53.2%;
+  --final-prize-progress-y: 14.15%;
   position: absolute;
-  top: var(--prize-panel-top);
-  right: max(4px, env(safe-area-inset-right, 0px));
-  height: calc(100% - var(--prize-panel-top) - 6px);
+  top: calc(max(var(--ui-top), 10px) + var(--final-prize-shift-y));
+  right: calc(
+    var(--edge-x) - var(--close-nudge-x, 0px) + var(--final-prize-shift-x)
+  );
+  height: calc(
+    (100% - max(var(--ui-top), 10px) - var(--final-prize-shift-y) - 6px) *
+      var(--final-prize-scale)
+  );
   z-index: 26;
   opacity: 0;
+  transform: translateX(calc(105% + 28px));
   pointer-events: none;
 }
 
-.final-prize-wrap img {
+.final-prize-panel {
+  position: relative;
+  display: inline-block;
+  height: 100%;
+  vertical-align: top;
+}
+
+.final-prize-panel > img:not(.final-prize-gem-icon) {
   display: block;
   height: 100%;
   width: auto;
@@ -1102,13 +1154,156 @@ html.is-touch.game-landscape .info-swing img {
   object-position: right top;
 }
 
+/* Cyan fill — grows from under the gem, rounded on the right */
+.final-prize-progress-fill {
+  --progress-ratio: 0;
+  position: absolute;
+  left: var(--final-prize-progress-track-left);
+  top: var(--final-prize-progress-track-top);
+  width: var(--final-prize-progress-track-width);
+  height: var(--final-prize-progress-track-height);
+  min-height: 5px;
+  z-index: 5;
+  transform: translateY(-50%) scaleX(var(--progress-ratio));
+  transform-origin: left center;
+  overflow: hidden;
+  border-radius: 0 999px 999px 0;
+  opacity: 1;
+  visibility: visible;
+  transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+  pointer-events: none;
+}
+
+.final-prize-progress-fill img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: fill;
+  object-position: left center;
+}
+
+/* Counter gem — aligned to progress bar art (replaces baked diamond) */
+.final-prize-gem-icon {
+  position: absolute;
+  left: var(--final-prize-gem-x);
+  top: var(--final-prize-gem-y);
+  width: var(--final-prize-gem-w);
+  height: var(--final-prize-gem-h);
+  z-index: 6;
+  transform: translate(-50%, -50%);
+  object-fit: contain;
+  pointer-events: none;
+}
+
+/* Dynamic 0/3 over baked 0/4 on Final Prize progress bar */
+.final-prize-progress-counter {
+  position: absolute;
+  left: var(--final-prize-progress-x);
+  top: var(--final-prize-progress-y);
+  z-index: 7;
+  transform: translate(-50%, -50%);
+  font-size: clamp(18px, 3.55cqmin, 30px);
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: 0.02em;
+  color: #fff;
+  text-shadow:
+    0 1px 0 #3d2814,
+    0 2px 0 #2a1a0c,
+    0 0 6px rgba(0, 0, 0, 0.75);
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+html.is-touch.game-landscape .final-prize-progress-counter {
+  font-size: clamp(17px, 3.3cqmin, 28px);
+}
+
+/* Done badges over Final Prize panel reward art (shown at 3/3) */
+.final-prize-rewards-done {
+  position: absolute;
+  inset: 0;
+  z-index: 9;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+}
+
+.final-prize-rewards-done.is-visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+.final-prize-rewards-done .final-prize-done {
+  position: absolute;
+  width: 24%;
+  height: auto;
+  max-width: 100%;
+  object-fit: contain;
+  transform: translate(-50%, -50%) scale(0.25);
+  opacity: 0;
+}
+
+.final-prize-rewards-done.is-visible .final-prize-done {
+  animation: panelDonePop 0.42s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.final-prize-rewards-done .final-prize-done:nth-child(1) {
+  left: 50%;
+  top: 31.5%;
+  animation-delay: 0s;
+}
+
+.final-prize-rewards-done .final-prize-done:nth-child(2) {
+  left: 29%;
+  top: 48%;
+  animation-delay: 0.07s;
+}
+
+.final-prize-rewards-done .final-prize-done:nth-child(3) {
+  left: 71%;
+  top: 48%;
+  animation-delay: 0.14s;
+}
+
+.final-prize-rewards-done .final-prize-done:nth-child(4) {
+  left: 29%;
+  top: 67.5%;
+  animation-delay: 0.21s;
+}
+
+.final-prize-rewards-done .final-prize-done:nth-child(5) {
+  left: 71%;
+  top: 67.5%;
+  animation-delay: 0.28s;
+}
+
+.final-prize-wrap.intro-hidden[data-intro="panel"] {
+  opacity: 0;
+  transform: translateX(calc(105% + 28px));
+}
+
 .final-prize-wrap.visible {
-  animation: prizePanelFadeIn var(--prize-panel-rise-duration, 0.85s) ease both;
+  animation: finalPrizeSlideIn var(--final-prize-slide-duration, 0.95s)
+    cubic-bezier(0.22, 1, 0.36, 1) both;
+  pointer-events: none;
+}
+
+@keyframes finalPrizeSlideIn {
+  from {
+    opacity: 0;
+    transform: translateX(calc(105% + 28px));
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
 
 .stage--game-complete .final-prize-wrap {
   animation: none;
   opacity: 0;
+  transform: translateX(calc(105% + 28px));
 }
 
 .prize-panel-wrap {
@@ -1466,6 +1661,7 @@ html.is-touch.game-landscape .info-swing img {
   min-width: 52px;
   max-width: 136px;
   height: var(--petard-size);
+  --petard-float-amp: 7px;
   --petard-slot-x: 0px;
   --petard-slot-y: calc(-50% + var(--petard-row-drop, 0px));
   transform: translate(calc(-50% + var(--petard-slot-x)), var(--petard-slot-y));
@@ -1526,16 +1722,52 @@ html.is-touch.game-landscape .info-swing img {
   height: calc(var(--petard-size) * 1.15);
 }
 
-.slot.opening img.cube {
-  visibility: hidden !important;
-  opacity: 0 !important;
-  transition: none !important;
-  animation: none !important;
+.slot.opening img.cube.petard {
+  pointer-events: none;
+  animation: cloudDissolve 0.78s ease forwards !important;
+}
+
+@keyframes cloudDissolve {
+  0% {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0) scale(1);
+    filter: blur(0);
+  }
+  55% {
+    opacity: 0.45;
+    filter: blur(1.5px);
+  }
+  100% {
+    opacity: 0;
+    visibility: hidden;
+    transform: translateX(-50%) translateY(-6px) scale(1.03);
+    filter: blur(3px);
+  }
 }
 
 .slot.intro-hidden {
   opacity: 0;
   pointer-events: none;
+}
+
+.slot.cloud-fade-in {
+  opacity: 0;
+  pointer-events: none;
+  animation: cloudFadeIn 0.95s ease forwards;
+  animation-delay: var(--cloud-fade-delay, 0s);
+}
+
+.slot.cloud-fade-in img.cube {
+  animation: none !important;
+}
+
+@keyframes cloudFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 /* Petard fly-in positions are driven in JS (1s, tilt-aligned arc) */
@@ -1583,8 +1815,10 @@ html.is-touch.game-landscape .info-swing img {
 /* Petards 1 & 3 — lift prize + petard (petard 2 uses default row height) */
 #field .slot[data-index="0"] img.prize,
 #field .slot[data-index="0"] img.cube,
+#field .slot[data-index="0"] .cloud-hit,
 #field .slot[data-index="2"] img.prize,
-#field .slot[data-index="2"] img.cube {
+#field .slot[data-index="2"] img.cube,
+#field .slot[data-index="2"] .cloud-hit {
   bottom: calc(var(--slot-sku-bottom, 0px) + 10px);
 }
 
@@ -1599,7 +1833,8 @@ html.is-touch.game-landscape .info-swing img {
 
 /* Petard 2 — lift prize + petard */
 #field .slot[data-index="1"] img.prize,
-#field .slot[data-index="1"] img.cube {
+#field .slot[data-index="1"] img.cube,
+#field .slot[data-index="1"] .cloud-hit {
   bottom: calc(var(--slot-sku-bottom, 0px) + 28px);
 }
 
@@ -1609,7 +1844,8 @@ html.is-touch.game-landscape .info-swing img {
 
 /* Petard 8 — lift prize + petard */
 #field .slot[data-index="7"] img.prize,
-#field .slot[data-index="7"] img.cube {
+#field .slot[data-index="7"] img.cube,
+#field .slot[data-index="7"] .cloud-hit {
   bottom: calc(var(--slot-sku-bottom, 0px) + 26px);
 }
 
@@ -1628,7 +1864,8 @@ html.is-touch.game-landscape #field .slot[data-index="5"]:not(.show-special-rewa
 
 /* Petard 6 — lift on field */
 #field .slot[data-index="5"] img.prize,
-#field .slot[data-index="5"] img.cube {
+#field .slot[data-index="5"] img.cube,
+#field .slot[data-index="5"] .cloud-hit {
   bottom: calc(var(--slot-sku-bottom, 0px) + 32px);
 }
 
@@ -1636,15 +1873,101 @@ html.is-touch.game-landscape #field .slot[data-index="5"]:not(.show-special-rewa
   bottom: calc(var(--character-reward-bottom, var(--slot-sku-bottom, 0px)) + 38px);
 }
 
+#field .slot {
+  --cloud-field-mul: 0.65;
+  overflow: visible;
+}
+
+#field .slot.pickable {
+  overflow: visible;
+}
+
+/* Cloud 5 — wider art; give slot + hit a bit more room on the right */
+#field .slot[data-index="4"] {
+  max-width: 172px;
+}
+
+#field .slot[data-index="4"] .cloud-hit {
+  z-index: 7;
+}
+
+#field .slot img.cube.petard,
+#field .slot .cloud-hit {
+  --cloud-field-mul: 0.65;
+  width: calc(var(--petard-size) * 1.55 * var(--cloud-field-mul));
+  height: calc(var(--petard-size) * 0.72 * var(--cloud-field-mul));
+  filter: none;
+}
+
+#field .slot .cloud-hit {
+  position: absolute;
+  left: 50%;
+  bottom: var(--slot-sku-bottom, 0px);
+  transform: translateX(-50%);
+  padding: 0;
+  margin: 0;
+  border: 0;
+  background: transparent;
+  -webkit-tap-highlight-color: transparent;
+  cursor: pointer;
+  z-index: 6;
+  pointer-events: auto;
+}
+
+#field .slot .cloud-hit:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.4);
+  outline-offset: 2px;
+}
+
+#field .slot[data-index="2"] {
+  --cloud-field-mul: 0.72;
+}
+
+#field .slot[data-index="4"] {
+  --cloud-field-mul: 0.78;
+}
+
+#field .slot[data-index="10"] {
+  --cloud-field-mul: 0.715;
+}
+
+/* Cloud 3 — slightly larger than default */
+#field .slot[data-index="2"] img.cube.petard {
+  --cloud-field-mul: 0.72;
+}
+
+/* Cloud 5 — +20% vs default 0.65 */
+#field .slot[data-index="4"] img.cube.petard {
+  --cloud-field-mul: 0.78;
+}
+
+/* Cloud 11 — +10% vs default 0.65 */
+#field .slot[data-index="10"] img.cube.petard {
+  --cloud-field-mul: 0.715;
+}
+
+.slot.almaz-cloud-vanish img.cube,
+.slot.almaz-cloud-vanish .cloud-hit {
+  opacity: 0 !important;
+  visibility: hidden !important;
+  transition: opacity 0.35s ease, visibility 0.35s ease;
+}
+
 .slot img.cube {
   z-index: 3;
-  cursor: pointer;
-  pointer-events: auto;
+  cursor: default;
+  pointer-events: none;
   transform: translateX(-50%);
 }
 
 .slot:not(.disabled):not(.opening):not(.intro-hidden):not(.petard-settling) img.cube {
-  animation: petardFloat var(--float-dur, 2.85s) ease-in-out infinite;
+  animation: petardFloat var(--float-dur, 4.8s) ease-in-out infinite;
+  animation-delay: var(--float-delay, 0s);
+  animation-fill-mode: backwards;
+}
+
+.slot:not(.disabled):not(.opening):not(.intro-hidden):not(.petard-settling) .cloud-hit {
+  animation: petardFloat var(--float-dur, 4.8s) ease-in-out infinite;
   animation-delay: var(--float-delay, 0s);
   animation-fill-mode: backwards;
 }
@@ -1655,7 +1978,7 @@ html.is-touch.game-landscape #field .slot[data-index="5"]:not(.show-special-rewa
     transform: translateX(-50%) translateY(0);
   }
   50% {
-    transform: translateX(-50%) translateY(-10px);
+    transform: translateX(-50%) translateY(calc(-1 * var(--petard-float-amp, 7px)));
   }
 }
 
@@ -1958,8 +2281,9 @@ html.is-touch.game-landscape .game-complete-overlay.is-visible .game-complete-re
 .vfx-burst {
   position: absolute;
   transform: translate(-50%, -50%);
-  width: 175px;
-  height: 175px;
+  width: 148px;
+  height: 148px;
+  filter: drop-shadow(0 0 14px rgba(255, 255, 255, 0.55));
 }
 
 .vfx-burst-transform {
@@ -2061,62 +2385,64 @@ html.is-touch.game-landscape .game-complete-overlay.is-visible .game-complete-re
   background: repeating-conic-gradient(
     from -8deg at 50% 50%,
     transparent 0deg 14deg,
-    rgba(255, 248, 230, 0.06) 14deg 16deg,
-    rgba(255, 228, 160, 0.38) 16deg 18.5deg,
-    rgba(255, 255, 255, 0.72) 18.5deg 19.5deg,
-    rgba(255, 228, 160, 0.38) 19.5deg 22deg,
-    rgba(255, 248, 230, 0.06) 22deg 24deg,
+    rgba(255, 255, 255, 0.12) 14deg 16deg,
+    rgba(255, 255, 255, 0.52) 16deg 18.5deg,
+    rgba(255, 255, 255, 0.95) 18.5deg 19.5deg,
+    rgba(255, 255, 255, 0.52) 19.5deg 22deg,
+    rgba(255, 255, 255, 0.12) 22deg 24deg,
     transparent 24deg 40deg
   );
-  filter: blur(0.35px);
+  filter: blur(0.5px) brightness(1.22)
+    drop-shadow(0 0 10px rgba(255, 255, 255, 0.85));
   -webkit-mask-image: radial-gradient(
     circle at 50% 50%,
     #000 0%,
-    #000 12%,
-    rgba(0, 0, 0, 0.85) 32%,
-    rgba(0, 0, 0, 0.4) 50%,
-    transparent 62%
+    #000 14%,
+    rgba(0, 0, 0, 0.9) 28%,
+    rgba(0, 0, 0, 0.35) 40%,
+    transparent 46%
   );
   mask-image: radial-gradient(
     circle at 50% 50%,
     #000 0%,
-    #000 12%,
-    rgba(0, 0, 0, 0.85) 32%,
-    rgba(0, 0, 0, 0.4) 50%,
-    transparent 62%
+    #000 14%,
+    rgba(0, 0, 0, 0.9) 28%,
+    rgba(0, 0, 0, 0.35) 40%,
+    transparent 46%
   );
   animation: vfxRaysPrimary 0.92s cubic-bezier(0.25, 0.9, 0.35, 1) forwards;
 }
 
 .vfx-rays-secondary {
-  width: 118%;
-  height: 118%;
+  width: 102%;
+  height: 102%;
   background: repeating-conic-gradient(
     from 14deg at 50% 50%,
     transparent 0deg 20deg,
-    rgba(255, 190, 120, 0.12) 20deg 22deg,
-    rgba(255, 240, 200, 0.35) 22deg 23.5deg,
-    rgba(200, 230, 255, 0.22) 23.5deg 24.5deg,
-    rgba(255, 240, 200, 0.35) 24.5deg 26deg,
-    rgba(255, 190, 120, 0.12) 26deg 28deg,
+    rgba(255, 255, 255, 0.14) 20deg 22deg,
+    rgba(255, 255, 255, 0.42) 22deg 23.5deg,
+    rgba(255, 255, 255, 0.65) 23.5deg 24.5deg,
+    rgba(255, 255, 255, 0.42) 24.5deg 26deg,
+    rgba(255, 255, 255, 0.14) 26deg 28deg,
     transparent 28deg 45deg
   );
-  filter: blur(1.8px);
+  filter: blur(2px) brightness(1.18)
+    drop-shadow(0 0 16px rgba(255, 255, 255, 0.65));
   mix-blend-mode: screen;
-  opacity: 0.85;
+  opacity: 0.95;
   -webkit-mask-image: radial-gradient(
     circle at 50% 50%,
     transparent 0%,
-    #000 22%,
-    rgba(0, 0, 0, 0.55) 48%,
-    transparent 64%
+    #000 20%,
+    rgba(0, 0, 0, 0.5) 38%,
+    transparent 48%
   );
   mask-image: radial-gradient(
     circle at 50% 50%,
     transparent 0%,
-    #000 22%,
-    rgba(0, 0, 0, 0.55) 48%,
-    transparent 64%
+    #000 20%,
+    rgba(0, 0, 0, 0.5) 38%,
+    transparent 48%
   );
   animation: vfxRaysSecondary 1s ease-out forwards;
 }
@@ -2125,17 +2451,20 @@ html.is-touch.game-landscape .game-complete-overlay.is-visible .game-complete-re
   position: absolute;
   left: 50%;
   top: 50%;
-  width: 32%;
-  height: 32%;
+  width: 36%;
+  height: 36%;
   transform: translate(-50%, -50%);
   border-radius: 50%;
   background: radial-gradient(
     circle,
-    rgba(255, 255, 255, 0.98) 0%,
-    rgba(255, 248, 220, 0.75) 42%,
-    rgba(255, 210, 130, 0.15) 68%,
+    rgba(255, 255, 255, 1) 0%,
+    rgba(255, 255, 255, 0.88) 38%,
+    rgba(255, 255, 255, 0.35) 62%,
     transparent 100%
   );
+  box-shadow:
+    0 0 22px rgba(255, 255, 255, 0.95),
+    0 0 44px rgba(255, 255, 255, 0.55);
   mix-blend-mode: screen;
   animation: vfxRaysCore 0.82s ease-out forwards;
 }
@@ -2155,7 +2484,7 @@ html.is-touch.game-landscape .game-complete-overlay.is-visible .game-complete-re
   }
   100% {
     opacity: 0;
-    transform: translate(-50%, -50%) rotate(28deg) scale(1.04);
+    transform: translate(-50%, -50%) rotate(28deg) scale(0.9);
   }
 }
 
@@ -2169,7 +2498,7 @@ html.is-touch.game-landscape .game-complete-overlay.is-visible .game-complete-re
   }
   100% {
     opacity: 0;
-    transform: translate(-50%, -50%) rotate(-20deg) scale(1.02);
+    transform: translate(-50%, -50%) rotate(-20deg) scale(0.88);
   }
 }
 
@@ -2325,10 +2654,15 @@ html.is-touch.game-landscape .game-complete-overlay.is-visible .game-complete-re
   width: var(--sz, 12px);
   height: var(--sz, 12px);
   border-radius: 50%;
-  background: radial-gradient(circle at 35% 35%, #fff 0%, var(--c, #fff) 45%, var(--c, #fff) 100%);
+  background: radial-gradient(
+    circle at 35% 35%,
+    #fff 0%,
+    #fff 40%,
+    rgba(255, 255, 255, 0.75) 100%
+  );
   box-shadow:
-    0 0 8px var(--c, #fff),
-    0 0 16px color-mix(in srgb, var(--c, #fff) 65%, transparent);
+    0 0 8px #fff,
+    0 0 16px rgba(255, 255, 255, 0.75);
   animation: sparkFly var(--dur, 0.6s) ease-out forwards;
 }
 
@@ -2382,6 +2716,48 @@ html.is-touch.game-landscape .game-complete-overlay.is-visible .game-complete-re
   animation: revealPrizePop 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 }
 
+.reveal-prize.reveal-prize--cloud-center {
+  width: min(11cqw, 120px);
+  max-width: 120px;
+  transform: translate(-50%, -50%);
+  transform-origin: 50% 50%;
+  object-position: center center;
+  animation: revealPrizePopCenter 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.reveal-prize.reveal-prize--almaz-fly {
+  z-index: 52;
+  backface-visibility: hidden;
+}
+
+.reveal-prize.reveal-prize--almaz-fly.is-flying {
+  animation: almazFlySpinRight var(--almaz-fly-ms, 720ms)
+    cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
+  transform: translate(-50%, -50%) rotate(0deg);
+  transform-origin: 50% 50%;
+  will-change: transform, left, top, width;
+}
+
+@keyframes almazFlySpinRight {
+  from {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+  to {
+    transform: translate(-50%, -50%) rotate(var(--almaz-fly-spin, -5deg));
+  }
+}
+
+@keyframes revealPrizePopCenter {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.25);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.08);
+  }
+}
+
 @keyframes revealPrizePop {
   from {
     opacity: 0;
@@ -2413,7 +2789,8 @@ html.is-touch.game-landscape .game-complete-overlay.is-visible .game-complete-re
   }
 }
 
-.slot.waiting-first-pick img.cube {
+.slot.waiting-first-pick img.cube,
+.slot.waiting-first-pick .cloud-hit {
   pointer-events: none;
   cursor: default;
 }
@@ -2423,6 +2800,30 @@ html.is-touch.game-landscape .game-complete-overlay.is-visible .game-complete-re
   cursor: default;
   animation: none;
   filter: brightness(0.85);
+}
+
+.slot.disabled .cloud-hit,
+.slot.opening .cloud-hit,
+.slot.intro-hidden .cloud-hit,
+.slot.petard-fly-in .cloud-hit,
+.slot.petard-settling .cloud-hit {
+  pointer-events: none;
+  cursor: default;
+  animation: none !important;
+}
+
+#field .slot.show-special-reward .cloud-hit,
+#field .slot.disabled .cloud-hit {
+  display: none;
+}
+
+#field .slot.disabled img.cube.petard,
+#field .slot.show-special-reward img.cube.petard {
+  opacity: 0 !important;
+  visibility: hidden !important;
+  animation: none !important;
+  filter: none !important;
+  pointer-events: none;
 }
 
 .slot.show-special-reward .slot-inner::before {
@@ -2438,8 +2839,8 @@ html.is-touch.game-landscape .game-complete-overlay.is-visible .game-complete-re
 }
 
 .slot.reward-sanny.show-special-reward .slot-inner::before {
-  width: calc(var(--petard-size) * 1.12);
-  height: calc(var(--petard-size) * 1.12);
+  width: calc(var(--petard-size) * 0.97);
+  height: calc(var(--petard-size) * 0.97);
   margin-left: 0;
   bottom: 5%;
 }
@@ -2449,11 +2850,13 @@ html.is-touch.game-landscape .game-complete-overlay.is-visible .game-complete-re
   width: calc(var(--petard-size) * 1.4);
   height: calc(var(--petard-size) * 1.4);
   bottom: var(--character-reward-bottom, var(--slot-sku-bottom, 0px));
-  filter: brightness(1);
-  will-change: filter;
+  filter: none;
+  will-change: transform;
+  opacity: 0;
   animation:
-    specialRewardFlashIn 0.35s cubic-bezier(0.33, 1, 0.68, 1) forwards,
-    characterBrightnessPulse 4s ease-in-out infinite;
+    characterFaceFadeIn 1.05s ease forwards,
+    petardFloat var(--float-dur, 4.8s) ease-in-out 1.05s infinite;
+  animation-delay: 0s, calc(1.05s + var(--float-delay, 0s));
 }
 
 .slot.reward-sam img.done {
@@ -2465,10 +2868,11 @@ html.is-touch.game-landscape .game-complete-overlay.is-visible .game-complete-re
 .slot.reward-mia img.done {
   width: calc(var(--petard-size) * 1.22);
   height: calc(var(--petard-size) * 1.22);
+  margin-left: -10px;
 }
 
 .slot.reward-mia.show-special-reward .slot-inner {
-  translate: 0 -2px;
+  translate: -8px 5px;
 }
 
 .slot.reward-mia.show-special-reward .slot-inner::before {
@@ -2477,37 +2881,37 @@ html.is-touch.game-landscape .game-complete-overlay.is-visible .game-complete-re
 }
 
 .slot.reward-hoppy img.done {
-  width: calc(var(--petard-size) * 0.82);
-  height: calc(var(--petard-size) * 0.82);
-  margin-left: -4px;
+  width: calc(var(--petard-size) * 0.78);
+  height: calc(var(--petard-size) * 0.78);
+  margin-left: -12px;
 }
 
 .slot.reward-hoppy.show-special-reward img.done {
   bottom: calc(
     var(--character-reward-bottom, var(--slot-sku-bottom, 0px)) +
-      var(--petard-size) * (1 - 0.82 * var(--character-face-mul, 1)) / 2
+      var(--petard-size) * (1 - 0.78 * var(--character-face-mul, 1)) / 2
   );
 }
 
 .slot.reward-hoppy.show-special-reward .slot-inner {
-  translate: 22px -5px;
+  translate: 12px 3px;
 }
 
 .slot.reward-hoppy.show-special-reward .slot-inner::before {
-  width: calc(var(--petard-size) * 0.9);
-  height: calc(var(--petard-size) * 0.9);
+  width: calc(var(--petard-size) * 0.84);
+  height: calc(var(--petard-size) * 0.84);
   margin-left: -16px;
   bottom: 16%;
 }
 
 .slot.reward-oscar img.done {
-  width: calc(var(--petard-size) * 1.05);
-  height: calc(var(--petard-size) * 1.05);
+  width: calc(var(--petard-size) * 0.893);
+  height: calc(var(--petard-size) * 0.893);
   margin-left: -6px;
 }
 
 #field .slot.reward-oscar.show-special-reward .slot-inner {
-  transform: rotate(var(--slot-tilt, 8deg)) translateY(-20px) !important;
+  transform: rotate(var(--slot-tilt, 8deg)) translateY(6px) !important;
 }
 
 #field .slot[data-index="3"]:not(.show-special-reward) .slot-inner {
@@ -2515,13 +2919,13 @@ html.is-touch.game-landscape .game-complete-overlay.is-visible .game-complete-re
 }
 
 .slot.reward-oscar.show-special-reward .slot-inner::before {
-  width: calc(var(--petard-size) * 1.16);
-  height: calc(var(--petard-size) * 1.16);
+  width: calc(var(--petard-size) * 0.986);
+  height: calc(var(--petard-size) * 0.986);
 }
 
 .slot.reward-peggy img.done {
-  width: calc(var(--petard-size) * 1.116);
-  height: calc(var(--petard-size) * 1.116);
+  width: calc(var(--petard-size) * 0.95);
+  height: calc(var(--petard-size) * 0.95);
   margin-left: 14px;
 }
 
@@ -2530,49 +2934,124 @@ html.is-touch.game-landscape .game-complete-overlay.is-visible .game-complete-re
 }
 
 .slot.reward-peggy.show-special-reward .slot-inner::before {
-  width: calc(var(--petard-size) * 1.224);
-  height: calc(var(--petard-size) * 1.224);
+  width: calc(var(--petard-size) * 1.04);
+  height: calc(var(--petard-size) * 1.04);
   margin-left: 14px;
 }
 
 .slot.reward-carrie img.done {
-  width: calc(var(--petard-size) * 1.14);
-  height: calc(var(--petard-size) * 1.14);
-}
-
-.slot.reward-carrie.show-special-reward .slot-inner::before {
-  width: calc(var(--petard-size) * 1.24);
-  height: calc(var(--petard-size) * 1.24);
-}
-
-.slot.reward-mole img.done {
-  width: calc(var(--petard-size) * 1.05);
-  height: calc(var(--petard-size) * 1.05);
-}
-
-.slot.reward-mole.show-special-reward .slot-inner {
-  translate: 0 -14px;
-}
-
-.slot.reward-mole.show-special-reward .slot-inner::before {
-  width: calc(var(--petard-size) * 1.16);
-  height: calc(var(--petard-size) * 1.16);
-}
-
-.slot.reward-sanny img.done {
-  width: calc(var(--petard-size) * 1.1);
-  height: calc(var(--petard-size) * 1.1);
+  width: calc(var(--petard-size) * 0.98);
+  height: calc(var(--petard-size) * 0.98);
   margin-left: -4px;
 }
 
-@keyframes specialRewardFlashIn {
+.slot.reward-carrie.show-special-reward .slot-inner::before {
+  width: calc(var(--petard-size) * 1.08);
+  height: calc(var(--petard-size) * 1.08);
+}
+
+.slot.reward-mole img.done {
+  width: calc(var(--petard-size) * 0.9);
+  height: calc(var(--petard-size) * 0.9);
+  margin-left: 18px;
+}
+
+.slot.reward-mole.show-special-reward .slot-inner {
+  translate: 14px 10px;
+}
+
+.slot.reward-mole.show-special-reward .slot-inner::before {
+  width: calc(var(--petard-size) * 0.99);
+  height: calc(var(--petard-size) * 0.99);
+}
+
+.slot.reward-sanny img.done {
+  width: calc(var(--petard-size) * 0.95);
+  height: calc(var(--petard-size) * 0.95);
+  margin-left: -12px;
+}
+
+.slot.reward-rita img.done {
+  width: calc(var(--petard-size) * 0.7);
+  height: calc(var(--petard-size) * 0.7);
+  margin-left: 10px;
+}
+
+html.is-touch.game-landscape .slot.reward-rita img.done {
+  width: calc(var(--petard-size) * 0.7 * var(--character-face-mul));
+  height: calc(var(--petard-size) * 0.7 * var(--character-face-mul));
+  margin-left: 10px;
+}
+
+.slot.reward-rita.show-special-reward .slot-inner::before {
+  width: calc(var(--petard-size) * 0.76);
+  height: calc(var(--petard-size) * 0.76);
+  margin-left: 8px;
+}
+
+/* Prize face — center of cloud bbox */
+#field .slot.show-special-reward img.done {
+  bottom: calc(var(--petard-size) * 0.72 * var(--cloud-field-mul) * var(--cloud-face-bottom-mul, 0.06)) !important;
+  left: 50%;
+  margin-left: 0 !important;
+}
+
+#field .slot.reward-mia.show-special-reward img.done {
+  bottom: calc(
+    var(--petard-size) * 0.72 * var(--cloud-field-mul) * var(--cloud-face-bottom-mul, 0.06) - 18px
+  ) !important;
+  margin-left: -10px !important;
+}
+
+#field .slot.reward-oscar.show-special-reward img.done {
+  bottom: calc(
+    var(--petard-size) * 0.72 * var(--cloud-field-mul) * var(--cloud-face-bottom-mul, 0.06) - 26px
+  ) !important;
+}
+
+#field .slot.reward-carrie.show-special-reward img.done {
+  bottom: calc(
+    var(--petard-size) * 0.72 * var(--cloud-field-mul) * var(--cloud-face-bottom-mul, 0.06) - 18px
+  ) !important;
+  margin-left: -4px !important;
+}
+
+#field .slot.reward-sanny.show-special-reward img.done {
+  bottom: calc(
+    var(--petard-size) * 0.72 * var(--cloud-field-mul) * var(--cloud-face-bottom-mul, 0.06) - 18px
+  ) !important;
+  margin-left: -12px !important;
+}
+
+#field .slot.reward-rita.show-special-reward img.done {
+  bottom: calc(
+    var(--petard-size) * 0.72 * var(--cloud-field-mul) * var(--cloud-face-bottom-mul, 0.06) - 12px
+  ) !important;
+  margin-left: 10px !important;
+}
+
+#field .slot.reward-hoppy.show-special-reward img.done {
+  bottom: calc(
+    var(--petard-size) * 0.72 * var(--cloud-field-mul) * var(--cloud-face-bottom-mul, 0.06) - 2px
+  ) !important;
+  margin-left: -12px !important;
+}
+
+#field .slot.reward-mole.show-special-reward img.done {
+  bottom: calc(
+    var(--petard-size) * 0.72 * var(--cloud-field-mul) * var(--cloud-face-bottom-mul, 0.06) - 24px
+  ) !important;
+  margin-left: 18px !important;
+}
+
+@keyframes characterFaceFadeIn {
   from {
     opacity: 0;
-    transform: translateX(-50%) scale(0.97);
+    transform: translateX(-50%) translateY(8px);
   }
   to {
     opacity: 1;
-    transform: translateX(-50%) scale(1);
+    transform: translateX(-50%) translateY(0);
   }
 }
 
@@ -2587,13 +3066,7 @@ html.is-touch.game-landscape .game-complete-overlay.is-visible .game-complete-re
 }
 
 .character-sparkle-ring {
-  position: absolute;
-  left: 50%;
-  bottom: 42%;
-  z-index: 3;
-  width: 0;
-  height: 0;
-  pointer-events: none;
+  display: none !important;
 }
 
 .char-ambient-spark {
