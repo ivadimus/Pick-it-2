@@ -6,6 +6,12 @@
   padding: 0;
 }
 
+@property --progress-ratio {
+  syntax: "<number>";
+  initial-value: 0;
+  inherits: false;
+}
+
 html,
 body {
   height: 100%;
@@ -799,7 +805,7 @@ html.is-touch.game-landscape .slot.reward-hoppy img.done {
 
 html.is-touch.game-landscape .slot.reward-hoppy.show-special-reward img.done {
   bottom: calc(
-    var(--character-reward-bottom, 10px) + var(--petard-size) * (1 - 0.78 * var(--character-face-mul, 1)) / 2 + 8px
+    var(--character-reward-bottom, 10px) + var(--petard-size) * (1 - 0.78 * var(--character-face-mul, 1)) / 2 - 2px
   );
 }
 
@@ -835,11 +841,11 @@ html.is-touch.game-landscape .slot.reward-carrie img.done {
 html.is-touch.game-landscape .slot.reward-mole img.done {
   width: calc(var(--petard-size) * 0.9 * var(--character-face-mul));
   height: calc(var(--petard-size) * 0.9 * var(--character-face-mul));
-  margin-left: 18px;
+  margin-left: 8px;
 }
 
 html.is-touch.game-landscape .slot.reward-mole.show-special-reward .slot-inner {
-  translate: 14px 10px;
+  translate: 4px 10px;
 }
 
 html.is-touch.game-landscape .info-swing img {
@@ -1001,6 +1007,7 @@ html.is-touch.game-landscape .info-swing img {
   --info-meter-gap: 6px;
   --info-panel-shift-x: 0px;
   --info-panel-shift-y: -24px;
+  --meter-nudge-x: 6px;
   --top-left-nudge-x: -16px;
   --close-nudge-x: 14px;
   --header-est-h: min(14cqw, 62px);
@@ -1156,32 +1163,35 @@ html.is-touch.game-landscape .info-swing img {
   object-position: right top;
 }
 
-/* Cyan fill — grows from under the gem, rounded on the right */
+/* Cyan fill — grows from under the gem, fully rounded pill cap on the right */
 .final-prize-progress-fill {
   --progress-ratio: 0;
   position: absolute;
   left: var(--final-prize-progress-track-left);
   top: var(--final-prize-progress-track-top);
-  width: var(--final-prize-progress-track-width);
+  width: calc(var(--final-prize-progress-track-width) * var(--progress-ratio));
+  max-width: var(--final-prize-progress-track-width);
   height: var(--final-prize-progress-track-height);
   min-height: 5px;
   z-index: 5;
-  transform: translateY(-50%) scaleX(var(--progress-ratio));
+  transform: translateY(-50%);
   transform-origin: left center;
   overflow: hidden;
-  border-radius: 0 999px 999px 0;
+  border-radius: 0 9999px 9999px 0;
   opacity: 1;
   visibility: visible;
-  transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+  transition: --progress-ratio 0.55s cubic-bezier(0.22, 1, 0.36, 1);
   pointer-events: none;
 }
 
 .final-prize-progress-fill img {
   display: block;
-  width: 100%;
+  width: calc(100% / max(var(--progress-ratio), 0.0001));
+  max-width: none;
   height: 100%;
   object-fit: fill;
   object-position: left center;
+  border-radius: 0 9999px 9999px 0;
 }
 
 /* Counter gem — aligned to progress bar art (replaces baked diamond) */
@@ -1543,6 +1553,7 @@ html.is-touch.game-landscape .final-prize-progress-counter {
   display: inline-block;
   height: 56px;
   flex-shrink: 0;
+  margin-left: var(--meter-nudge-x, 0);
   opacity: 1;
   visibility: visible;
 }
@@ -2896,7 +2907,7 @@ html.is-touch.game-landscape .game-complete-overlay.is-visible .game-complete-re
 }
 
 .slot.reward-hoppy.show-special-reward .slot-inner {
-  translate: 12px 3px;
+  translate: 12px 10px;
 }
 
 .slot.reward-hoppy.show-special-reward .slot-inner::before {
@@ -2955,11 +2966,11 @@ html.is-touch.game-landscape .game-complete-overlay.is-visible .game-complete-re
 .slot.reward-mole img.done {
   width: calc(var(--petard-size) * 0.9);
   height: calc(var(--petard-size) * 0.9);
-  margin-left: 18px;
+  margin-left: 8px;
 }
 
 .slot.reward-mole.show-special-reward .slot-inner {
-  translate: 14px 10px;
+  translate: 4px 10px;
 }
 
 .slot.reward-mole.show-special-reward .slot-inner::before {
@@ -2976,19 +2987,19 @@ html.is-touch.game-landscape .game-complete-overlay.is-visible .game-complete-re
 .slot.reward-rita img.done {
   width: calc(var(--petard-size) * 0.7);
   height: calc(var(--petard-size) * 0.7);
-  margin-left: 10px;
+  margin-left: 18px;
 }
 
 html.is-touch.game-landscape .slot.reward-rita img.done {
   width: calc(var(--petard-size) * 0.7 * var(--character-face-mul));
   height: calc(var(--petard-size) * 0.7 * var(--character-face-mul));
-  margin-left: 10px;
+  margin-left: 18px;
 }
 
 .slot.reward-rita.show-special-reward .slot-inner::before {
   width: calc(var(--petard-size) * 0.76);
   height: calc(var(--petard-size) * 0.76);
-  margin-left: 8px;
+  margin-left: 16px;
 }
 
 /* Prize face — center of cloud bbox */
@@ -3013,7 +3024,7 @@ html.is-touch.game-landscape .slot.reward-rita img.done {
 
 #field .slot.reward-carrie.show-special-reward img.done {
   bottom: calc(
-    var(--petard-size) * 0.72 * var(--cloud-field-mul) * var(--cloud-face-bottom-mul, 0.06) - 18px
+    var(--petard-size) * 0.72 * var(--cloud-field-mul) * var(--cloud-face-bottom-mul, 0.06) + 2px
   ) !important;
   margin-left: -4px !important;
 }
@@ -3027,14 +3038,14 @@ html.is-touch.game-landscape .slot.reward-rita img.done {
 
 #field .slot.reward-rita.show-special-reward img.done {
   bottom: calc(
-    var(--petard-size) * 0.72 * var(--cloud-field-mul) * var(--cloud-face-bottom-mul, 0.06) - 12px
+    var(--petard-size) * 0.72 * var(--cloud-field-mul) * var(--cloud-face-bottom-mul, 0.06) - 2px
   ) !important;
-  margin-left: 10px !important;
+  margin-left: 20px !important;
 }
 
 #field .slot.reward-hoppy.show-special-reward img.done {
   bottom: calc(
-    var(--petard-size) * 0.72 * var(--cloud-field-mul) * var(--cloud-face-bottom-mul, 0.06) - 2px
+    var(--petard-size) * 0.72 * var(--cloud-field-mul) * var(--cloud-face-bottom-mul, 0.06) - 12px
   ) !important;
   margin-left: -12px !important;
 }
@@ -3043,7 +3054,7 @@ html.is-touch.game-landscape .slot.reward-rita img.done {
   bottom: calc(
     var(--petard-size) * 0.72 * var(--cloud-field-mul) * var(--cloud-face-bottom-mul, 0.06) - 24px
   ) !important;
-  margin-left: 18px !important;
+  margin-left: 8px !important;
 }
 
 @keyframes characterFaceFadeIn {
