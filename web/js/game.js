@@ -240,7 +240,7 @@
     "Assets/cloud5.png?v=cloudv9",
     "Assets/cloud6.png?v=cloudv9",
     "Assets/cloud7.png?v=cloudv9",
-    "Assets/cloud8.png?v=cloudv9",
+    "Assets/cloud8.png?v=cloud8v10",
     "Assets/cloud9.png?v=cloudv9",
     "Assets/cloud10.png?v=cloudv9",
     "Assets/cloud11.png?v=cloudv9",
