@@ -1163,35 +1163,32 @@ html.is-touch.game-landscape .info-swing img {
   object-position: right top;
 }
 
-/* Cyan fill — grows from under the gem, fully rounded pill cap on the right */
+/* Cyan fill — grows from under the gem; scaleX keeps bar thickness stable */
 .final-prize-progress-fill {
   --progress-ratio: 0;
   position: absolute;
   left: var(--final-prize-progress-track-left);
   top: var(--final-prize-progress-track-top);
-  width: calc(var(--final-prize-progress-track-width) * var(--progress-ratio));
-  max-width: var(--final-prize-progress-track-width);
+  width: var(--final-prize-progress-track-width);
   height: var(--final-prize-progress-track-height);
   min-height: 5px;
   z-index: 5;
-  transform: translateY(-50%);
+  transform: translateY(-50%) scaleX(var(--progress-ratio));
   transform-origin: left center;
   overflow: hidden;
   border-radius: 0 9999px 9999px 0;
   opacity: 1;
   visibility: visible;
-  transition: --progress-ratio 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+  transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
   pointer-events: none;
 }
 
 .final-prize-progress-fill img {
   display: block;
-  width: calc(100% / max(var(--progress-ratio), 0.0001));
-  max-width: none;
+  width: 100%;
   height: 100%;
   object-fit: fill;
   object-position: left center;
-  border-radius: 0 9999px 9999px 0;
 }
 
 /* Counter gem — aligned to progress bar art (replaces baked diamond) */
@@ -1233,6 +1230,7 @@ html.is-touch.game-landscape .final-prize-progress-counter {
 
 /* Done badges over Final Prize panel reward art (shown at 3/3) */
 .final-prize-rewards-done {
+  --final-prize-done-drop: 2.5%;
   position: absolute;
   inset: 0;
   z-index: 9;
@@ -1262,31 +1260,31 @@ html.is-touch.game-landscape .final-prize-progress-counter {
 
 .final-prize-rewards-done .final-prize-done:nth-child(1) {
   left: 50%;
-  top: 31.5%;
+  top: calc(31.5% + var(--final-prize-done-drop, 0));
   animation-delay: 0s;
 }
 
 .final-prize-rewards-done .final-prize-done:nth-child(2) {
   left: 29%;
-  top: 48%;
+  top: calc(48% + var(--final-prize-done-drop, 0));
   animation-delay: 0.07s;
 }
 
 .final-prize-rewards-done .final-prize-done:nth-child(3) {
   left: 71%;
-  top: 48%;
+  top: calc(48% + var(--final-prize-done-drop, 0));
   animation-delay: 0.14s;
 }
 
 .final-prize-rewards-done .final-prize-done:nth-child(4) {
   left: 29%;
-  top: 67.5%;
+  top: calc(67.5% + var(--final-prize-done-drop, 0));
   animation-delay: 0.21s;
 }
 
 .final-prize-rewards-done .final-prize-done:nth-child(5) {
   left: 71%;
-  top: 67.5%;
+  top: calc(67.5% + var(--final-prize-done-drop, 0));
   animation-delay: 0.28s;
 }
 

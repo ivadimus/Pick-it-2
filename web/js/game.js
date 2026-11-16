@@ -253,12 +253,12 @@
   const SLOT_LAYOUT = [
     { x: 42, y: -2, rotate: -4, offsetX: 10 },
     { x: 44, y: 26, rotate: 3, offsetY: 19 },
-    { x: 54, y: 6, rotate: 2 },
+    { x: 54, y: 6, rotate: 2, offsetY: -10 },
     { x: 61, y: 34, rotate: -3 },
     { x: 70, y: -4, rotate: 4 },
     { x: 26, y: 24, rotate: 3 },
     { x: 30, y: 50, rotate: -4 },
-    { x: 51, y: 59, rotate: 2 },
+    { x: 51, y: 59, rotate: 2, offsetY: -10 },
     { x: 67, y: 50, rotate: -2 },
     { x: 74, y: 22, rotate: 5 },
   /** Cloud 11 — above cloud 6 */
