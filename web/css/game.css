@@ -9,7 +9,7 @@
 html,
 body {
   height: 100%;
-  background: radial-gradient(ellipse at 50% 30%, #2a2a2e 0%, #0a0a0c 55%, #000 100%);
+  background: #000;
   overflow: hidden;
   font-family: system-ui, -apple-system, Segoe UI, sans-serif;
   -webkit-tap-highlight-color: transparent;
@@ -329,7 +329,7 @@ body.force-landscape .prize-panel-wrap {
     margin: 0;
     overflow: hidden;
     overscroll-behavior: none;
-    background: #0a1020;
+    background: #000;
   }
 
   #app,
@@ -470,6 +470,7 @@ html:not(.is-touch) .iphone .stage {
 
 html.is-touch.game-landscape .stage {
   --info-panel-scale: calc(0.9555 * 0.85);
+  --info-panel-shift-x: 10px;
   --top-left-nudge-x: -10px;
   /* Rope Y: top of stage + lift info panel slightly */
   --info-rope-top: calc(
@@ -479,6 +480,7 @@ html.is-touch.game-landscape .stage {
 
 html:not(.is-touch) .iphone .stage {
   --info-panel-scale: 0.9555;
+  --info-panel-shift-x: 10px;
   --top-left-nudge-x: 0px;
   --info-rope-top: calc(-1 * max(var(--ui-top), 10px));
   --prize-panel-items-drop: -10px;
@@ -493,7 +495,7 @@ html:not(.is-touch) .iphone .top-left-controls {
 html.is-touch.game-landscape .info-panel-wrap,
 html:not(.is-touch) .iphone .info-panel-wrap {
   position: absolute;
-  left: var(--info-rope-x, 55px);
+  left: calc(var(--info-rope-x, 55px) + var(--info-panel-shift-x, 0px));
   top: var(--info-rope-top, -8px);
   margin-left: 0;
   margin-top: 0;
@@ -699,9 +701,9 @@ html.is-touch.game-landscape #field .slot[data-index="3"] .slot-inner {
   translate: 0 -8px;
 }
 
-/* Touch landscape: reward character faces −15% */
+/* Touch landscape: reward character face scale (all `.reward-* img.done`) */
 html.is-touch.game-landscape .stage {
-  --character-face-mul: 0.85;
+  --character-face-mul: 1;
   --character-reward-bottom: 10px;
   --petard-row-drop: 12px;
   --petard-lower-row-lift: 20px;
@@ -997,7 +999,7 @@ html.is-touch.game-landscape .info-swing img {
   --ui-top: 12px;
   --info-panel-scale: 0.85;
   --info-meter-gap: 6px;
-  --info-panel-shift-x: -10px;
+  --info-panel-shift-x: 0px;
   --info-panel-shift-y: -24px;
   --top-left-nudge-x: -16px;
   --close-nudge-x: 14px;

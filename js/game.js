@@ -233,17 +233,17 @@
 
   /** Clouds 1–11 */
   const PETARDS = [
-    "Assets/cloud1.png?v=cloudv5",
-    "Assets/cloud2.png?v=cloudv6",
-    "Assets/cloud3.png?v=cloudv5",
-    "Assets/cloud4.png?v=cloudv6",
-    "Assets/cloud5.png?v=cloudv5",
-    "Assets/cloud6.png?v=cloudv5",
-    "Assets/cloud7.png?v=cloudv6",
-    "Assets/cloud8.png?v=cloudv6",
-    "Assets/cloud9.png?v=cloudv5",
-    "Assets/cloud10.png?v=cloudv5",
-    "Assets/cloud11.png?v=cloudv1",
+    "Assets/cloud1.png?v=cloudv9",
+    "Assets/cloud2.png?v=cloudv9",
+    "Assets/cloud3.png?v=cloudv9",
+    "Assets/cloud4.png?v=cloudv9",
+    "Assets/cloud5.png?v=cloudv9",
+    "Assets/cloud6.png?v=cloudv9",
+    "Assets/cloud7.png?v=cloudv9",
+    "Assets/cloud8.png?v=cloudv9",
+    "Assets/cloud9.png?v=cloudv9",
+    "Assets/cloud10.png?v=cloudv9",
+    "Assets/cloud11.png?v=cloudv9",
   ];
 
   const PICK_COUNT = PETARDS.length;
@@ -255,10 +255,10 @@
     { x: 44, y: 26, rotate: 3, offsetY: 19 },
     { x: 54, y: 6, rotate: 2 },
     { x: 61, y: 34, rotate: -3 },
-    { x: 70, y: 2, rotate: 4 },
+    { x: 70, y: -4, rotate: 4 },
     { x: 26, y: 24, rotate: 3 },
     { x: 30, y: 50, rotate: -4 },
-    { x: 51, y: 54, rotate: 2 },
+    { x: 51, y: 59, rotate: 2 },
     { x: 67, y: 50, rotate: -2 },
     { x: 74, y: 22, rotate: 5 },
   /** Cloud 11 — above cloud 6 */
