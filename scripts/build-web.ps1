@@ -8,6 +8,9 @@ if (Test-Path $out) {
 New-Item -ItemType Directory -Path $out | Out-Null
 
 Copy-Item (Join-Path $root "index.html") $out
+if (Test-Path (Join-Path $root "manifest.webmanifest")) {
+  Copy-Item (Join-Path $root "manifest.webmanifest") $out
+}
 Copy-Item (Join-Path $root "css") (Join-Path $out "css") -Recurse
 Copy-Item (Join-Path $root "js") (Join-Path $out "js") -Recurse
 Copy-Item (Join-Path $root "Assets") (Join-Path $out "Assets") -Recurse
